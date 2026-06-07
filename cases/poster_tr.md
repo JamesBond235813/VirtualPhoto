@@ -5676,4 +5676,147 @@ Dramatic raking light, tilt-shift depth of field, 8K, UE5, cinematic lighting. A
 
 <img src="../images/poster_case340/output.jpg" width="500">
 
+---
+### Case 341: Chaotic Doodle Photo Portrait
 
+**Source**: [@Shorelyn_](https://x.com/Shorelyn_/status/2063235707632533954)
+
+**Çıktı**:
+
+<table>
+<tr><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/poster_case341/output.jpg" width="100%" alt="Output image"></a></td><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/poster_case341/output2.jpg" width="100%" alt="Output image"></a></td></tr>
+<tr><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/poster_case341/output3.jpg" width="100%" alt="Output image"></a></td><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/poster_case341/output4.jpg" width="100%" alt="Output image"></a></td></tr>
+</table>
+
+**Prompt:**
+
+```
+Turn this photo into a chaotic funny doodle illustration, intentionally messy and low-skill, as if drawn quickly with a cheap marker, crayon, or worn-out felt pen on paper.
+
+Create exaggerated facial features with awkward proportions, uneven eyes, oversized head, tiny body, crooked smile, and clumsy anatomy while still keeping the person recognizable. Use rough childish sketch lines, shaky hand-drawn strokes, visible scribbles, overlapping outlines, accidental marks, and random doodles around the scene. Add a simple cartoon-style background with badly drawn buildings, trees, clouds, street elements, and uneven perspective. Coloring should look careless and imperfect, with visible stroke texture, inconsistent fill areas, wax crayon texture, marker bleed, and irregular shading. Include playful imperfections like crossed-out lines, unfinished details, random arrows, tiny notes, stars, swirls, and abstract scribbles. Overall aesthetic should feel humorous, spontaneous, handmade, energetic, goofy, and intentionally unpolished, resembling a child's sketchbook mixed with absurd internet meme art. High texture detail, paper grain visible, asymmetrical composition, awkward framing, expressive doodle chaos, raw sketch energy.
+```
+
+---
+### Case 342: Semi-3D Fashion Editorial Avatar
+
+**Source**: [@AIwithSynthia](https://x.com/AIwithSynthia/status/2063299903582003607)
+
+**Çıktı**:
+
+<table>
+<tr><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/poster_case342/output.jpg" width="100%" alt="Output image"></a></td><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/poster_case342/output2.jpg" width="100%" alt="Output image"></a></td></tr>
+</table>
+
+**Prompt:**
+
+```
+Create a premium high-resolution vector-cartoon / semi-3D illustration of the person from the reference image. Reimagine them in a stylish modern fashion-editorial look, sitting confidently on a sleek designer chair. Outfit: trendy T-shirt, fashionable skirt/pants, stylish sneakers, and bold sunglasses as the hero accessory. Exaggerate key facial features while maintaining recognizable likeness. Clean flat-colored background (single vibrant color), smooth lines, sharp details, soft studio lighting, luxury advertising aesthetic, centered composition with ample negative space for branding and headlines. Ultra-detailed, print-ready, billboard-quality, modern eyewear campaign style.
+```
+
+---
+### Case 343: Retro Automotive Travel Poster Template
+
+**Source**: [@iamaiistudio](https://x.com/iamaiistudio/status/2063276384924111329)
+
+**Çıktı**:
+
+<table>
+<tr><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/poster_case343/output.jpg" width="100%" alt="Output image"></a></td><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/poster_case343/output2.jpg" width="100%" alt="Output image"></a></td></tr>
+<tr><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/poster_case343/output3.jpg" width="100%" alt="Output image"></a></td><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/poster_case343/output4.jpg" width="100%" alt="Output image"></a></td></tr>
+</table>
+
+**Prompt:**
+
+```
+prompt:
+
+Create a vertical retro automotive travel poster featuring [CAR MODEL] either parked or driving through [SCENERY]. Use a bold 1970s printmaking style with a strict 4-color palette only: [COLORS]. Build the image with flat silkscreen-style color blocking, strong contrast shadows, simplified geometric reflections, slight ink misregistration, subtle paper grain, distressed print texture, and graphic halftone shading.
+
+Avoid gradients, photorealism, glossy 3D rendering, and modern digital polish. The car should feel iconic and graphic, with thick simplified contour shapes and a warm nostalgic travel-ad atmosphere.
+
+Include vintage advertisement typography that reads "[TITLE]" and integrate an authentic [BRAND LOGO] naturally into the layout. Add stylized trees, buildings, road signs, landscape shapes, or location details in the background so the setting clearly supports the travel-poster story.
+
+The composition should feel like a strong mid-century tourism poster: balanced, editorial, poster-ready, and visually bold. Keep the design clean and intentional, with no stamp border.
+```
+
+---
+### Case 344: Family Watercolor Fashion Sketch
+
+**Source**: [@AiwithZohaib](https://x.com/AiwithZohaib/status/2063277611409879452)
+
+**Çıktı**:
+
+| <a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/poster_case344/output.jpg" width="500" alt="Output image"></a> |
+
+**Prompt:**
+
+```
+A stylish family standing together, digital watercolor and ink sketch illustration, fashion illustration style, white clean background with abstract beige brush strokes, soft lighting, expressive line art, casual modern clothing, denim jeans, black hijabs, relaxed happy pose, elegant minimal aesthetic, high detail, editorial sketch look.
+```
+
+---
+### Case 345: Japanese Fashion Cover Illustration
+
+**Source**: [@iamaiistudio](https://x.com/iamaiistudio/status/2063291615205314737)
+
+**Çıktı**:
+
+<table>
+<tr><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/poster_case345/output.jpg" width="100%" alt="Output image"></a></td><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/poster_case345/output2.jpg" width="100%" alt="Output image"></a></td></tr>
+<tr><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/poster_case345/output3.jpg" width="100%" alt="Output image"></a></td><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/poster_case345/output4.jpg" width="100%" alt="Output image"></a></td></tr>
+</table>
+
+**Prompt:**
+
+```
+prompt:
+
+Create a high-end Japanese fashion magazine cover illustration. The subject is [XXX]. Use a minimalist, modern fashion-digital-illustration style with refined cel shading, crisp clean large color-block modeling, almost no visible linework, and elegant sharp edges.
+
+Keep a blue-and-white structural palette as the foundation, with restrained accents of coral red, misty purple, pale yellow, ash pink, sage green, silver gray, or similar soft secondary tones. The final image should stay minimal, premium, cohesive, and not flashy.
+
+Use a clean background, such as cobalt blue, royal blue, misty blue, or another pure large color field, with generous negative space. Strong sunlight enters from the upper left. White areas should be bright and close to overexposed, while shadows are built from hard-edged planes of cool blue, gray-blue, and blue-purple.
+
+Give the subject a slender silhouette and a quiet, aloof posture. Simplify details while keeping the form accurate. The overall mood should feel translucent, cool, elegant, fashionable, and suitable for a premium magazine cover poster.
+
+Avoid text, watermarks, complex backgrounds, photorealistic photography, 3D, heavy impasto, childish cartoon styling, and cluttered decoration.
+```
+
+---
+### Case 346: Love Bites Cyberpunk Manga Cover
+
+**Source**: [@her19845](https://x.com/her19845/status/2063310953475678229)
+
+**Çıktı**:
+
+<table>
+<tr><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/poster_case346/output.jpg" width="100%" alt="Output image"></a></td><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/poster_case346/output2.jpg" width="100%" alt="Output image"></a></td></tr>
+</table>
+
+**Prompt:**
+
+```
+Generate a vintage vinyl album cover with a cyberpunk and manga aesthetic, grainy and worn. The background is dark and textured, with scratches and dust. At the top, the title "LOVE BITES" appears in large white and gray capital letters, with two red lines crossed out. To the left of the title is a red six-pointed star symbol with a central asterisk. Below the title is the text: "BEAUTY IS POWER, SILENCE IS WAR."
+
+In the center is a monochrome manga-style illustration of the attached image. Behind it is a monochrome illustration of a 1990s JDM sports car.
+
+Includes multiple graphic details and logos:
+
+Top left: logos for "STEREOPHONIC HIGH FIDELITY RECORDING," "33 ⅓ RPM," and "LP."
+
+Top right: a red circle that reads "VOL. 01."
+
+On the left: the text "HER19845", a barcode, and a tracklist with 6 numbered songs (e.g., "01. SILENT GAZE", "02. LOVE BITES", "03. NIGHT DRIVE", "04. EMPTY PROMISES", "05. FAKE SMILE", "06. BLEED QUIET").
+
+On the right: a red square with a globe logo, the text "YOU CAN WATCH BUT YOU WON'T UNDERSTAND", asterisks, and "@IMAGE_5".
+
+Bottom left: the Japanese text "美しさは力である" and a barcode "0025".
+
+Bottom right: a silver "PARENTAL ADVISORY EXPLICIT CONTENT" label and red graffiti "DON'T FALL IN LOVE" with a crossed-out heart.
+
+Copyright text "ALL RIGHTS RESERVED" at the bottom edge.
+
+The overall aesthetic should be nostalgic, underground, and raw, with the grain and texture of a real vinyl record. The color scheme is monochromatic with red accents.
+
+Use a 3:4 aspect ratio.
+```

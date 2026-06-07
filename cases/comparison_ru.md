@@ -1052,4 +1052,34 @@ Output:
 
 <img src="../images/comparison_case93/output.jpg" width="500">
 
+---
+### Case 94: 90s Sitcom Fashion Character Lineup
 
+**Source**: [@Taaruk_](https://x.com/Taaruk_/status/2063300353588879444)
+
+**Результат**:
+
+<table>
+<tr><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/comparison_case94/output.jpg" width="100%" alt="Output image"></a></td><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/comparison_case94/output2.jpg" width="100%" alt="Output image"></a></td></tr>
+</table>
+
+**Промпт:**
+
+```
+Full-body character lineup showcasing the same person transformed through six iconic 1990s fashion aesthetics, standing side-by-side in a clean studio composition. Each version features a unique outfit inspired by classic 90s sitcom culture: varsity college student, sophisticated business casual professional, colorful patterned sweater enthusiast, streetwear trendsetter, nerdy intellectual with suspenders and glasses, and vibrant hip-hop fashion icon. Consistent facial features across all versions, expressive poses, detailed clothing textures, oversized silhouettes, retro sneakers, loafers, accessories, layered outfits, bold color palettes, fashion illustration style, character design sheet, clean white background, highly detailed linework, modern cartoon realism, concept art, fashion reference board, full-body view, professional character turnaround, ultra-sharp details, vibrant colors, 4K, masterpiece.
+```
+
+---
+### Case 95: SQL Collectible Toy Packaging Grid
+
+**Source**: [@Gdgtify](https://x.com/Gdgtify/status/2063254078269137330)
+
+**Результат**:
+
+| <a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/comparison_case95/output.jpg" width="500" alt="Output image"></a> |
+
+**Промпт:**
+
+```
+SELECT * FROM Collectible_Toy_Packaging  WHERE layout_format = '2x2_Quadrant_Grid' AND targets = ARRAY['[IP_1]', '[IP_2]', '[IP_3]', '[IP_4]'] AND quadrant_structure = ARRAY[     (Zone: 'Left_Column', Material: 'Printed_Cardboard', Content: 'Massive_Typography_Title_And_Inferred_Creator_Metadata'),     (Zone: 'Center_Stage', Material: 'confection candy', Content: 'infer_main_character_and_diorama(target)'),      (Zone: 'Right_Column', Material: 'Transparent_Glossy_Vacuum_Plastic_Blister_Pack', Content: 'infer_three_iconic_props(target)_As_3D_Miniatures_With_Text_Labels') ] AND color_grading = 'Vintage_Retro_Palette_Matching_Inferred_IP_Era' AND camera = 'Product_Photography_Front_Orthographic_View';
+```

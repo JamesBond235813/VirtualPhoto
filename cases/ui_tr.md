@@ -2199,4 +2199,171 @@ Output
 
 <img src="../images/ui_case172/output.jpg" width="500">
 
+---
+### Case 173: Energy Drink Storyboard Grid
 
+**Source**: [@Strength04_X](https://x.com/Strength04_X/status/2063256718902219255)
+
+**Çıktı**:
+
+| <a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/ui_case173/output.jpg" width="500" alt="Output image"></a> |
+
+**Prompt:**
+
+```
+- Create a high-energy 16:9 energy drink advertising storyboard in 3x2 grid (6 frames), editorial layout, Monster/Red Bull style, matte black + electric green palette. Structured flow: pre-game locker room, can crack open close-up, first sip slow motion, athlete explosive start, peak performance moment, victory fist pump closure. Each frame split: top cinematic image (no text) + bottom storyboard notes. Underground sports aesthetic, zero to hundred mood, energy as superpower. A single energy drink can cracking open is the emotional center throughout. Add a bold heading at the top of the storyboard in aggressive bold font reading: NO LIMITS — AN ENERGY EDITORIAL.
+
+KLING AI 3.0 PROMPT :- This is a storyboard image containing 6 frames arranged in a 3x2 grid. Treat each frame as a separate sequential scene. Animate every frame one by one from left to right, top to bottom. Start from frame 1 top-left, then frame 2, then frame 3, then frame 4, then frame 5, end with frame 6 bottom-right. Each frame must play for exactly 2.5 seconds. Total video duration 15 seconds. Do not merge frames together. Do not skip any frame. Do not loop. Play each frame in strict order as one continuous uninterrupted cinematic video. Use locker room fluorescent light flickering over athlete in pre-game silence, can tab cracking open with mist spray in extreme slow motion macro, first sip with throat gulp visible and eyes sharpening in real time, explosive sprint start with ground crack effect and motion blur, peak performance jump with sweat flying off body in slow motion, victory fist pump with crowd blur and electric green light flare. Add subtle motion within each frame only, smooth dissolve transitions between frames. Lighting transitions from cold locker room fluorescent blue to electric green can crack flash to harsh outdoor performance sun to victory green flare closure. Underground sports aesthetic, zero to hundred raw energy mood, drink as pure superpower. A single energy drink can cracking open remains the emotional focus across all 6 frames. Ultra-realistic, 4K photographic quality, no cartoon style.
+```
+
+---
+### Case 174: Anime Short Film Dev Board
+
+**Source**: [@HeyAbhishek](https://x.com/HeyAbhishek/status/2063271070426435756)
+
+**Çıktı**:
+
+| <a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/ui_case174/output.jpg" width="500" alt="Output image"></a> |
+
+**Prompt:**
+
+```
+"Create a single vertical anime development board for an original emotional short film titled "One More Player". Output ONE combined image with 2 sections: top section = character design sheet, bottom section = cinematic storyboard page.
+STYLE: ultra high-quality nostalgic late 90s / early 2000s anime movie look, premium hand-drawn animation style, beautifully painted backgrounds, rich environmental detail, cinematic composition, soft but highly refined shading, natural character anatomy, expressive faces, subtle texture, realistic wet ground reflections, warm cloudy sunset lighting, atmospheric depth, polished old-anime film aesthetic, visually stunning frame quality, clean studio-level pre-production presentation. Make it feel like a premium old anime film, not modern glossy anime.
+IMPORTANT: create fully original characters. Do not copy any existing anime, manga, game, or sports anime characters, faces, hairstyles, outfits, or famous designs.
+SECTION A: CHARACTER DESIGN SHEET
+Show 5 original characters clearly and consistently.
+Main child:
+A shy little boy around 8 years old with short messy dark hair, large warm eyes, slim build, oversized yellow T-shirt, blue shorts, and small sneakers. He feels nervous at first, then happy and accepted.
+Show:
+- front view
+- side view
+- back view
+- 3/4 view
+- expressions: nervous, scared, surprised, soft smile, happy
+- poses: holding soccer ball, standing shyly, running with ball
+Teen group:
+Four teenage boys around 14 to 16, sporty and friendly, each with different hairstyles and casual soccer outfits. They should look slightly intimidating at first from the little boy’s perspective, but actually kind and welcoming. One teen is the warm leader.
+Show for the teen group:
+- simple front, side, back, and 3/4 views
+- relaxed poses
+- soccer poses
+- smiling expressions
+Keep them original, visually distinct, and cohesive.
+Add small handwritten design notes and simple color swatches.
+SECTION B: STORYBOARD PAGE
+Create 8 cinematic storyboard panels in a clean grid. Use red panel borders, blue motion arrows, handwritten camera notes, timing notes, and short action notes. Keep all characters consistent.
+Story beats:
+1. Four teenagers playing soccer on a neighborhood ground after light rain, warm cloudy sunset, wet reflections on the field.
+2. The soccer ball flies away toward the sitting area beside the field.
+3. A shy little boy sitting alone notices the ball and picks it up.
+4. The teenage boys walk toward him together. From the little boy’s view, they look a little scary.
+5. Close-up of the little boy holding the ball with a nervous face.
+6. The warm leader smiles kindly and gestures with his hand, inviting the boy to come play.
+7. The little boy’s face changes from scared to relieved, then he smiles and runs toward them.
+8. Final wide shot: the little boy happily plays soccer with the four teens under warm sunset light.
+ENVIRONMENT:
+Neighborhood soccer ground, wet dusty field, simple goalpost, sitting area beside the field, chain-link fence, trees, cloudy sunset sky, calm old-anime mood.
+FINAL GOAL:
+Make this a clean, highly polished, premium-quality anime pre-production board with beautiful cinematic presentation, emotional storytelling, strong readability, and a heartwarming ending. The image should look visually rich, refined, and high-end."
+```
+
+---
+### Case 175: Editorial Anatomy Infographic Poster
+
+**Source**: [@iamaiistudio](https://x.com/iamaiistudio/status/2063202176344932732)
+
+**Çıktı**:
+
+<table>
+<tr><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/ui_case175/output.jpg" width="100%" alt="Output image"></a></td><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/ui_case175/output2.jpg" width="100%" alt="Output image"></a></td></tr>
+</table>
+
+**Prompt:**
+
+```
+prompt:
+
+Ultra-clean editorial infographic poster (1080x1080 square), blending premium magazine design with lifestyle illustration and photography.
+
+**HEADLINE:**
+Bold, large sans-serif type centered at top: "HUMAN LIVER"
+
+**MAIN IMAGE:**
+High-detail 3D illustration of the human liver, showing the Right Lobe, Left Lobe, and Gallbladder. Color palette: terracotta, deep brownish-red, and soft coral tones. Background: clean, soft beige or off-white. Lighting: soft studio style.
+
+**POSTER SECTIONS:**
+
+* **Floating Fact Bubbles (top corners):**
+    * "Weight: ~1.5 kg (Heaviest internal organ)"
+    * "Regeneration: Can regrow from just 25%"
+    * "Location: Upper Right Abdomen"
+    * "Blood Flow: Filters 1.4 L/min"
+
+* **Organ Labels (arrows pointing to anatomy):**
+    * Right Lobe
+    * Left Lobe
+    * Gallbladder (greenish sac below)
+    * Common Bile Duct
+    * Hepatic Portal Vein
+
+* **Key Functions (left column, small icons):**
+    * **Detox:** Filters toxins from blood
+    * **Bile:** Aids fat digestion
+    * **Metabolism:** Processes carbs and protein
+    * **Storage:** Holds glycogen, iron, vitamins
+
+* **Highlights (right column, small icons):**
+    * **Chemical Factory:** 500+ vital functions
+    * **Immunity:** Fights blood-borne infections
+    * **Clotting:** Makes blood-clotting proteins
+
+* **Health Tips (bottom cards):**
+    1. **Limit Alcohol** - Prevents cirrhosis
+    2. **Stay Hydrated** - Flushes toxins
+    3. **Balanced Diet** - Low sugar, high fiber
+    4. **Vaccinate** - Hepatitis A & B protection
+    5. **Exercise** - Burns fat and triglycerides
+
+**STYLE:** Glassmorphism frosted-glass text boxes, soft drop shadows, medical accuracy meets high-end graphic design.
+```
+
+---
+### Case 176: Graphite Coffee-Shop Storyboard
+
+**Source**: [@insmind_com](https://x.com/insmind_com/status/2063252153612017766)
+
+**Çıktı**:
+
+| <a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/ui_case176/output.jpg" width="500" alt="Output image"></a> |
+
+**Prompt:**
+
+```
+Create a rough black-and-white graphite pencil storyboard in a 3x3 grid, nine 16:9 panels, with hand-drawn borders, panel numbers, motion arrows, music notes, and handwritten director notes.
+
+Storyboard for a premium animated coffee-shop hip-hop commercial for insMind. Keep the same young female barista throughout: expressive eyes, high messy bun with loose curls, white barista shirt with tiny pale-blue details, black neck scarf with a small insMind logo, dark fitted trousers, white flat shoes. Warm modern cafe interior, espresso machine, wooden counter, pastry case, large windows, soft daylight.
+
+Show these beats: opening push-in with the barista singing, steam wand frothing milk like stage smoke, wide hip-hop side-step, body wave with scarf logo visible, overhead latte pour, macro foam rings, delighted reaction, top-down latte art spelling “insMind”, and final hero reveal as she offers the cup to camera.
+
+Use rough pencil lines, grayscale shading, sketch texture, cinematic storyboard composition, expressive unfinished production-board style. Avoid polished color render, photorealistic stills, vector art, extra characters, subtitles, UI, or unreadable brand spelling.
+```
+
+---
+### Case 177: Venice Travel Vlogger Collage
+
+**Source**: [@ZaraIrahh](https://x.com/ZaraIrahh/status/2063432414945591594)
+
+**Çıktı**:
+
+| <a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/ui_case177/output.jpg" width="500" alt="Output image"></a> |
+
+**Prompt:**
+
+```
+Young female travel vlogger exploring Venice, Italy across 13 wildly candid, chaotic, funny, and uniquely Venetian moments, stunning with long windswept hair, effortless luxury European summer fashion, playful adventurous personality, authentic handheld iPhone collage aesthetic with natural imperfections, unfiltered travel energy, social media realism, spontaneous vacation chaos.
+
+Frame Breakdown Includes: — accidentally boarding the wrong vaporetto and enthusiastically waving at the dock before realizing she's headed in the opposite direction — struggling to drag an oversized suitcase over a steep stone canal bridge, laughing at the absurdity of it — getting completely lost in Venice's labyrinth of narrow alleys and emerging into a deserted hidden courtyard with a confused expression — chasing a paper city map as the wind sends it flying toward a canal — being unexpectedly surrounded by a massive flock of pigeons in Piazza San Marco while clutching a half-eaten pastry — attempting an elegant gondola selfie but getting caught off guard when the gondola suddenly rocks — discovering a tiny hidden bookstore and reacting dramatically to a sleeping cat curled up among the books — squeezing through an impossibly narrow Venetian alleyway and realizing halfway through that it's much tighter than expected — trying to pose gracefully in a beautiful Venetian carnival mask while struggling not to laugh — caught in a sudden rain shower as historic squares become reflective and crowded with umbrellas — confidently following a shortcut only to reach a dead-end canal with no bridge, staring in disbelief — accidentally walking into the background of an extravagant luxury wedding photoshoot near a historic palace — Final frame: sitting beside a quiet canal at blue hour, surrounded by shopping bags, a melting gelato, and a crumpled city map, laughing uncontrollably after spending the entire day hopelessly lost, candid shaky capture, motion blur, authentic Venice travel chaos
+
+Style: ultra-realistic travel vlog collage, Venice street photography, handheld smartphone camera aesthetic, imperfect framing, accidental photobombs, candid expressions, genuine laughter, iconic Venetian architecture, canals, gondolas, historic bridges, hidden alleyways, European summer atmosphere, natural lighting, motion blur, lens flares, overexposed highlights, authentic memories, cinematic storytelling, high-detail realism, viral travel content, no studio polish, no posing, spontaneous documentary-style moments, social media realism, chaotic vacation energy, luxury travel influencer aesthetic.
+```

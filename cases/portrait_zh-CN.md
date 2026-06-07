@@ -2771,3 +2771,65 @@ Camera placed directly beneath a completely transparent glass floor, pointing st
 
 <img src="../images/portrait_case266/output.jpg" width="500">
 
+---
+### Case 267: Black-and-White Identity Collage Grid
+
+**Source**: [@mehvishs25](https://x.com/mehvishs25/status/2063293613514330224)
+
+**输出效果**:
+
+| <a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/portrait_case267/output.jpg" width="500" alt="Output image"></a> |
+
+**提示词:**
+
+```
+Edit the photo while preserving the subject’s exact facial features and identity. Create a high-resolution vertical portrait composition (9:16), ultra-detailed, sharp focus throughout, no background blur, rendered with a premium 8K editorial finish.
+
+Design the image as a sophisticated black-and-white fashion portrait collage arranged in a 2×3 grid, featuring six unique frames of the same young woman in a clean, minimalist indoor studio environment. The overall aesthetic should feel elegant, cinematic, intimate, and effortlessly stylish, inspired by timeless monochrome fashion editorials and luxury magazine photography.
+
+Hair is long, reaching the waist, colored a cool ash-brown with subtle gray undertones. Styled in a Korean-inspired hush cut with soft face-framing layers, airy see-through bangs, and sleek straight lengths that gently curve outward at the ends. The texture appears silky, healthy, and glossy, with a few natural flyaway strands for realism.
+
+Beauty styling remains refined and understated: luminous hydrated skin, naturally feathered brows, subtle brown eyeliner, soft mascara, muted nude lips with a velvety finish, and barely-there blush for a fresh editorial appearance.
+
+Wardrobe consists of a fitted white rib-knit tank top paired with relaxed high-waisted vintage-wash denim jeans, visible in selected frames. Accessories include matte black nail art, delicate silver hoop earrings, multiple silver rings, and a slim silver wristwatch, contributing to a contemporary fashion-editorial mood.
+
+Collage Frame Concepts:
+
+• Frame 1 — Tight portrait crop, fingertips resting softly against the cheek, direct eye contact, confident yet gentle expression.
+
+• Frame 2 — Casual seated pose on a sofa, body turned slightly to one side, gaze directed away from the camera in a contemplative moment.
+
+• Frame 3 — Relaxed reclining position with one knee bent, leaning comfortably into an arm, creating a graceful editorial silhouette.
+
+• Frame 4 — Arms lifted behind the head, posture open and self-assured, subtle lean backward conveying effortless confidence.
+
+• Frame 5 — Emotional close portrait with a slight head tilt and closed eyes, emphasizing calmness and quiet introspection.
+
+• Frame 6 — Front-facing seated composition with composed expression and subtle movement through the hair for a natural, candid feel.
+
+Environment remains intentionally simple: a light-toned studio wall with a neutral sofa appearing selectively across certain frames. The background should support the subject without drawing attention away from her.
+
+Lighting is soft and diffused, resembling natural window light in a professional studio. Gentle directional shadows create depth and dimensionality, while a faint rim light subtly separates the hair from the background. Avoid harsh flash or strong contrast.
+
+Captured with the quality and detail associated with professional mirrorless cameras such as a Canon EOS R5 or Sony A7R IV. Use a combination of intimate close-ups and medium-length portraits, primarily at eye level with occasional slightly elevated angles. Emphasize balanced magazine-style compositions and natural visual flow across the collage.
+
+Final processing should feature a rich monochrome conversion with smooth tonal transitions, lifted shadows, restrained contrast, delicate 35mm film grain, a soft matte finish, and exceptional detail retention in both skin texture and hair, echoing the look of classic high-fashion editorial photography.
+```
+
+---
+### Case 268: Plush Mascot Companion Portrait
+
+**Source**: [@doctorwasif](https://x.com/doctorwasif/status/2063304967218475072)
+
+**输出效果**:
+
+<table>
+<tr><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/portrait_case268/output.jpg" width="100%" alt="Output image"></a></td><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/portrait_case268/output2.jpg" width="100%" alt="Output image"></a></td></tr>
+<tr><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/portrait_case268/output3.jpg" width="100%" alt="Output image"></a></td><td width="50%"><a href="https://evolink.ai/gpt-image-2-prompts?utm_source=github&utm_medium=picture&utm_campaign=awesome-gpt-image-2-API-and-Prompts" target="_blank" rel="noopener noreferrer"><img src="../images/portrait_case268/output4.jpg" width="100%" alt="Output image"></a></td></tr>
+</table>
+
+**提示词:**
+
+```
+Use the uploaded portrait as the identity reference and preserve the person's recognizable facial features, hairstyle, skin tone, expression, fashion sense, and overall presence. Create a premium full-body portrait of the same person alongside a large custom-designed plush companion that feels like their mascot alter ego. The plush should be inspired by the subject's mood, facial impression, styling, posture, and overall energy rather than being a generic animal or mascot. Automatically choose a creature concept that best matches the person's unique vibe, avoiding predictable or stereotype-based selections. The mascot must clearly be an oversized plush toy with soft fuzzy fabrics, rounded shapes, detailed stitching, premium textures, and a collectible designer-toy aesthetic. Its design, expression, silhouette, and proportions should subtly reflect the person's character and visual identity. Build a harmonious color palette using cues from the subject's hair, skin tone, clothing, and atmosphere so the person, mascot, and scene feel naturally connected. Show both the person and plush fully visible from head to toe, including shoes and all parts of the mascot, with balanced framing and comfortable spacing. Choose a natural interaction that suits the subject, such as standing beside, sitting with, leaning on, lightly hugging, or casually engaging with the plush companion. Keep the person's expression relaxed, warm, and authentic with a subtle smile or calm gaze, avoiding stiff poses or mannequin-like appearances. If the original image only shows part of the outfit, intelligently complete the full look in a believable and stylish way. Place the scene in a clean, aesthetically pleasing environment such as a minimalist studio, cozy lifestyle setting, or refined editorial backdrop that complements both the person and mascot without distractions. The final image should feel charming, cozy, stylish, emotionally engaging, visually cohesive, and suitable for a high-end character campaign or social-media editorial. Avoid cropped bodies, hidden shoes, incomplete mascot visibility, generic animal choices, real animals, horror elements, cheap toy aesthetics, awkward poses, cluttered backgrounds, distorted anatomy, extra limbs, text, logos, or watermarks.
+```
