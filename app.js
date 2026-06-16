@@ -6,7 +6,8 @@ const state = {
   view: "cases",
   category: "all",
   user: JSON.parse(localStorage.getItem("prompt_user") || "null"),
-  bootstrap: { categories: [], providers: [], prices: [], users: [] },
+  bootstrap: { categories: [], providers: [], prices: [], users: [], settings: {} },
+  aiNews: { items: [], lastUpdatedAt: "", refreshTime: "09:00", loaded: false, loading: false },
   cases: [],
   casesMeta: { total: 0, offset: 0, limit: 0, hasMore: false, loadingMore: false },
   caseReferenceGroups: [],
@@ -61,6 +62,7 @@ const VIEW_META = {
   finance: { eyebrow: "Pay", title: "支付", sub: "支付渠道配置 · 收支流水 · 站点余额与提现" },
   billing: { eyebrow: "Billing", title: "账单", sub: "充值与消费明细，一目了然" },
   history: { eyebrow: "Gallery", title: "创作历史", sub: "你的每一次创作都在这里" },
+  aiNews: { eyebrow: "AI News", title: "AI产经", sub: "全球 AI 模型、价格、风控、福利与政策快讯" },
 };
 
 const AUTHORIZATION_STATEMENT =
@@ -213,6 +215,8 @@ function bindEvents() {
 
   // 供应商向导 / 用户
   on("newProviderButton", "click", () => openProviderWizard());
+  on("siteSettingsForm", "submit", saveSiteSettings);
+  on("refreshAiNewsButton", "click", () => renderAiNews({ forceRefresh: true }));
   on("wizardCancelButton", "click", () => $("#providerWizard").close());
   on("wizardNextButton", "click", wizardNext);
   on("wizardBackButton", "click", () => setWizardStep(1));
@@ -456,6 +460,7 @@ function renderAll() {
   renderPromptTools();
   renderCases();
   renderSettings();
+  renderSiteSettings();
   renderUsers();
   renderHistory();
 }
@@ -568,6 +573,78 @@ function useDerivedPrompt() {
 
 function closeDerivedPanel() {
   $("#derivedPanel").hidden = true;
+}
+
+/* ---------- AI产经 ---------- */
+async function renderAiNews({ forceRefresh = false } = {}) {
+  const list = $("#aiNewsList");
+  if (!list) return;
+  if (state.aiNews.loading) return;
+  state.aiNews.loading = true;
+  list.innerHTML = `<div class="empty-state" style="padding:36px 16px"><strong>正在更新 AI产经</strong><p>正在整理全球 AI 行业动态</p></div>`;
+  const button = $("#refreshAiNewsButton");
+  if (button) button.disabled = true;
+  try {
+    const data = forceRefresh
+      ? await api("/api/ai-news/refresh", { method: "POST", body: JSON.stringify({}) })
+      : await api("/api/ai-news");
+    state.aiNews.items = data.items || [];
+    state.aiNews.lastUpdatedAt = data.lastUpdatedAt || "";
+    state.aiNews.refreshTime = data.refreshTime || state.bootstrap.settings?.aiNewsRefreshTime || "09:00";
+    state.aiNews.loaded = true;
+    renderAiNewsList();
+    if (forceRefresh) showNotice("AI产经已刷新", "success");
+  } catch (error) {
+    list.innerHTML = `<div class="empty-state" style="padding:36px 16px"><strong>AI产经加载失败</strong><p>${escapeHtml(error.message)}</p></div>`;
+    showNotice(`AI产经加载失败：${error.message}`, "error");
+  } finally {
+    state.aiNews.loading = false;
+    if (button) button.disabled = false;
+  }
+}
+
+function renderAiNewsList() {
+  const list = $("#aiNewsList");
+  if (!list) return;
+  const last = state.aiNews.lastUpdatedAt ? `最近更新 ${formatTime(state.aiNews.lastUpdatedAt)}` : "尚未完成首次更新";
+  const refresh = state.aiNews.refreshTime || "09:00";
+  $("#aiNewsMeta").textContent = `${last} · 每天 ${refresh} 自动更新`;
+  const grouped = groupAiNewsItems(state.aiNews.items || []);
+  list.innerHTML = state.aiNews.items.length
+    ? Object.entries(grouped).map(([category, items]) => renderAiNewsGroup(category, items)).join("")
+    : `<div class="empty-state" style="padding:36px 16px"><strong>暂无 AI产经</strong><p>等待每日自动更新，或点击右上角刷新</p></div>`;
+}
+
+function groupAiNewsItems(items) {
+  return items.reduce((groups, item) => {
+    const category = item.category || "动态";
+    groups[category] = groups[category] || [];
+    groups[category].push(item);
+    return groups;
+  }, {});
+}
+
+function renderAiNewsGroup(category, items) {
+  return `
+    <section class="ai-news-group">
+      <h3>${escapeHtml(category)}</h3>
+      <div class="ai-news-cards">
+        ${items.map(renderAiNewsItem).join("")}
+      </div>
+    </section>`;
+}
+
+function renderAiNewsItem(item) {
+  return `
+    <article class="ai-news-card">
+      <div class="ai-news-card-head">
+        <span>${escapeHtml(item.sourceName || "公开来源")}</span>
+        <time>${escapeHtml(item.publishedAt ? formatTime(item.publishedAt) : formatTime(item.createdAt))}</time>
+      </div>
+      <h4>${escapeHtml(item.title)}</h4>
+      <p>${escapeHtml(item.summary)}</p>
+      <a href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noopener noreferrer">查看来源</a>
+    </article>`;
 }
 
 function renderCategoryChips() {
@@ -1961,7 +2038,37 @@ function sleep(ms) {
 }
 
 /* ---------- 供应商页面：模型列表 ---------- */
+function renderSiteSettings() {
+  const form = $("#siteSettingsForm");
+  if (!form) return;
+  const settings = state.bootstrap.settings || {};
+  form.elements.derivePriceYuan.value = settings.derivePriceYuan ?? "0";
+  form.elements.aiNewsRefreshTime.value = settings.aiNewsRefreshTime || "09:00";
+}
+
+async function saveSiteSettings(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const button = form.querySelector("button[type=submit]");
+  button.disabled = true;
+  try {
+    const settings = await api("/api/settings", {
+      method: "POST",
+      body: JSON.stringify({
+        derivePriceYuan: form.elements.derivePriceYuan.value || "0",
+        aiNewsRefreshTime: form.elements.aiNewsRefreshTime.value || "09:00",
+      }),
+    });
+    state.bootstrap.settings = settings;
+    renderSiteSettings();
+    showNotice("站点参数已保存", "success");
+  } finally {
+    button.disabled = false;
+  }
+}
+
 function renderSettings() {
+  renderSiteSettings();
   const list = $("#providersList");
   const rows = providerModelRows();
   if (!rows.length) {
@@ -2630,6 +2737,7 @@ function switchView(view) {
     });
   }
   if (view === "settings" && !sameView) renderSettings();
+  if (view === "aiNews" && (!state.aiNews.loaded || !sameView)) renderAiNews();
   if (view === "studio") {
     requestAnimationFrame(autoResizePromptInput);
     scrollTimelineToEnd(previousView === "studio" ? "smooth" : "auto");

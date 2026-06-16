@@ -27,6 +27,7 @@ import { getPool, query } from "./db.mjs";
 import { ensureSmsSchema, requestSmsCode, verifySmsCode } from "./sms.mjs";
 import { discoverModels } from "./model-discovery.mjs";
 import { buildCaseReferenceGroups } from "./case-reference-utils.mjs";
+import { getAiNewsDigest, refreshAiNews } from "./ai-news.mjs";
 import { generateImage } from "./openai-compatible.mjs";
 import {
   createVolcengineVideoTask,
@@ -43,6 +44,8 @@ import {
   deleteCase,
   deletePrice,
   deleteProvider,
+  ensureAiNewsSchema,
+  ensureAppSchema,
   ensureCaseUsageSchema,
   ensureVideoTaskSchema,
   finalizeSuccessfulVideoTask,
@@ -51,6 +54,8 @@ import {
   getNextCaseNumber,
   getGenerationContext,
   getGenerationContextByDisplayName,
+  getPublicSettings,
+  getSetting,
   listBootstrap,
   listCases,
   listCreations,
@@ -58,6 +63,7 @@ import {
   recordCaseUse,
   recordGeneration,
   rechargeUser,
+  saveSiteSettings,
   setPriceEnabled,
   setProviderEnabled,
   updateVideoTask,
@@ -88,6 +94,22 @@ app.get("/api/health", async (req, res) => {
 
 app.get("/api/bootstrap", asyncHandler(async (req, res) => {
   res.json(await listBootstrap());
+}));
+
+app.get("/api/settings", asyncHandler(async (req, res) => {
+  res.json(await getPublicSettings());
+}));
+
+app.post("/api/settings", asyncHandler(async (req, res) => {
+  res.json(await saveSiteSettings(req.body));
+}));
+
+app.get("/api/ai-news", asyncHandler(async (req, res) => {
+  res.json(await getAiNewsDigest());
+}));
+
+app.post("/api/ai-news/refresh", asyncHandler(async (req, res) => {
+  res.json(await runAiNewsRefresh());
 }));
 
 app.post("/api/login", asyncHandler(async (req, res) => {
@@ -200,7 +222,7 @@ app.post("/api/translate", asyncHandler(async (req, res) => {
    定价：.env 中 DERIVE_PRICE_YUAN（默认 0 = 免费）；收费时计入用户消费流水 */
 app.post("/api/derive-prompt", upload.single("image"), asyncHandler(async (req, res) => {
   if (!req.file) throw new Error("请先上传图片");
-  const priceCents = yuanToCents(process.env.DERIVE_PRICE_YUAN || "0");
+  const priceCents = await getDerivePromptPriceCents();
   const userId = req.body.userId;
   if (priceCents > 0) {
     assertRequired(userId, "推导提示词为付费功能，请先登录");
@@ -526,10 +548,51 @@ ensurePaymentSchema().catch((error) => console.warn("支付表初始化推迟：
 ensureSmsSchema().catch((error) => console.warn("短信表初始化推迟：", error.message));
 ensureCaseUsageSchema().catch((error) => console.warn("案例使用记录表初始化推迟：", error.message));
 ensureVideoTaskSchema().catch((error) => console.warn("视频任务表初始化推迟：", error.message));
+ensureAppSchema().catch((error) => console.warn("站点参数表初始化推迟：", error.message));
+ensureAiNewsSchema().catch((error) => console.warn("AI产经表初始化推迟：", error.message));
+scheduleAiNewsRefresh();
 
 app.listen(config.port, () => {
   console.log(`Prompt gallery app running at http://localhost:${config.port}`);
 });
+
+async function runAiNewsRefresh() {
+  return refreshAiNews({ summarize: summarizeAiNewsEntry });
+}
+
+function scheduleAiNewsRefresh() {
+  const planNext = async () => {
+    const refreshTime = await getSetting("aiNewsRefreshTime", "09:00").catch(() => "09:00");
+    const delay = nextBeijingNineOClock(refreshTime) - Date.now();
+    setTimeout(async () => {
+      try {
+        await runAiNewsRefresh();
+      } catch (error) {
+        console.warn("AI产经自动更新失败：", error.message);
+      } finally {
+        planNext();
+      }
+    }, Math.max(1000, delay));
+  };
+  planNext();
+}
+
+function nextBeijingNineOClock(refreshTime = "09:00") {
+  const [hour = 9, minute = 0] = String(refreshTime || "09:00").split(":").map(Number);
+  const now = new Date();
+  const beijingParts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Shanghai",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(now).reduce((acc, part) => {
+    if (part.type !== "literal") acc[part.type] = part.value;
+    return acc;
+  }, {});
+  let target = Date.parse(`${beijingParts.year}-${beijingParts.month}-${beijingParts.day}T${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}:00+08:00`);
+  if (target <= now.getTime()) target += 24 * 60 * 60 * 1000;
+  return target;
+}
 
 function asyncHandler(handler) {
   return (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next);
@@ -673,6 +736,11 @@ async function translateViaMyMemory(source) {
   return translated.join("");
 }
 
+async function getDerivePromptPriceCents() {
+  const configured = await getSetting("derivePriceYuan", process.env.DERIVE_PRICE_YUAN || "0");
+  return yuanToCents(configured || "0");
+}
+
 async function getProviderCredentialForModel(model) {
   const providers = await query(
     `SELECT p.base_url AS baseUrl, p.api_key AS apiKey
@@ -690,6 +758,35 @@ async function getProviderCredentialForModel(model) {
     apiKey: providers[0].apiKey,
     chatEndpoint: base.endsWith("/v1") ? `${base}/chat/completions` : `${base}/v1/chat/completions`,
   };
+}
+
+async function summarizeAiNewsEntry(entry) {
+  const model = process.env.AI_NEWS_MODEL || process.env.TRANSLATE_MODEL || process.env.DERIVE_MODEL || "gpt-5.4";
+  const { apiKey, chatEndpoint } = await getProviderCredentialForModel(model);
+  const response = await fetchWithTimeout(chatEndpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+    body: JSON.stringify({
+      model,
+      temperature: 0.2,
+      max_tokens: 160,
+      messages: [
+        {
+          role: "system",
+          content: "你是 AI 产业快讯编辑。把新闻标题压缩成中文简报，保留模型名、公司、价格、监管、风险等关键信息。只输出一句话，35到80个中文字符。",
+        },
+        {
+          role: "user",
+          content: `分类：${entry.category}\n标题：${entry.title}\n来源：${entry.sourceName || "未知"}`,
+        },
+      ],
+    }),
+  }, 30000);
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(payload?.error?.message || `AI产经摘要失败：${response.status}`);
+  const result = payload?.choices?.[0]?.message?.content;
+  if (!result) throw new Error("AI产经摘要模型未返回内容");
+  return result;
 }
 
 async function derivePromptFromImage(filePath, mimeType) {

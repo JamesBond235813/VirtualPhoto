@@ -10,6 +10,31 @@ const repositorySource = readFileSync(new URL("../server/repository.mjs", import
 const schemaSource = readFileSync(new URL("../server/schema.mjs", import.meta.url), "utf8");
 const openaiCompatibleSource = readFileSync(new URL("../server/openai-compatible.mjs", import.meta.url), "utf8");
 
+test("AI industry news has a navigation entry, page, api, schema, and daily scheduler", () => {
+  assert.match(indexSource, /data-view="aiNews"[\s\S]*AI产经/);
+  assert.match(indexSource, /<section id="aiNewsView" class="view"/);
+  assert.match(indexSource, /id="aiNewsList"/);
+  assert.match(appSource, /aiNews: \{ eyebrow: "AI News", title: "AI产经"/);
+  assert.match(appSource, /async function renderAiNews\(\{ forceRefresh = false \} = \{\}\)/);
+  assert.match(appSource, /api\("\/api\/ai-news"\)/);
+  assert.match(serverSource, /app\.get\("\/api\/ai-news"/);
+  assert.match(serverSource, /function scheduleAiNewsRefresh\(\)/);
+  assert.match(serverSource, /nextBeijingNineOClock/);
+  assert.match(schemaSource, /CREATE TABLE IF NOT EXISTS ai_news_items/);
+});
+
+test("provider settings expose derive prompt price as a saved site parameter", () => {
+  assert.match(indexSource, /id="siteSettingsForm"[\s\S]*推导提示词单价[\s\S]*name="derivePriceYuan"/);
+  assert.match(appSource, /function renderSiteSettings\(\)/);
+  assert.match(appSource, /async function saveSiteSettings\(event\)/);
+  assert.match(appSource, /state\.bootstrap\.settings/);
+  assert.match(serverSource, /app\.post\("\/api\/settings"/);
+  assert.match(serverSource, /getDerivePromptPriceCents\(\)/);
+  assert.match(repositorySource, /export async function getPublicSettings\(\)/);
+  assert.match(repositorySource, /export async function saveSiteSettings/);
+  assert.match(schemaSource, /CREATE TABLE IF NOT EXISTS app_settings/);
+});
+
 test("case gallery actions use delegated handlers instead of fragile inline button calls", () => {
   assert.match(appSource, /on\("gallery", "click", handleCaseAction\)/);
   assert.match(appSource, /function handleCaseAction\(event\)/);
@@ -30,14 +55,14 @@ test("entering the case gallery resets filters and refreshes all cases", () => {
 });
 
 test("frontend resource version is bumped for cache-safe delivery", () => {
-  assert.match(indexSource, /styles\.css\?v=2026061[235][a-z0-9]+/);
-  assert.match(indexSource, /app\.js\?v=2026061[235][a-z0-9]+/);
+  assert.match(indexSource, /styles\.css\?v=2026061[2356][a-z0-9]+/);
+  assert.match(indexSource, /app\.js\?v=2026061[2356][a-z0-9]+/);
 });
 
 test("sidebar navigation follows the requested page order and renames finance to payment", () => {
   const navBlock = indexSource.match(/<nav class="sidebar-nav"[\s\S]*?<\/nav>/)?.[0] || "";
   const views = [...navBlock.matchAll(/data-view="([^"]+)"/g)].map((match) => match[1]);
-  assert.deepEqual(views.slice(0, 6), ["studio", "billing", "history", "cases", "settings", "finance"]);
+  assert.deepEqual(views.slice(0, 7), ["studio", "billing", "history", "aiNews", "cases", "settings", "finance"]);
   assert.match(navBlock, /data-view="finance"[\s\S]*支付/);
   assert.doesNotMatch(navBlock, /data-view="finance"[\s\S]*财务/);
   assert.match(appSource, /finance: \{ eyebrow: "Pay", title: "支付"/);

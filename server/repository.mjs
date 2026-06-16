@@ -1,10 +1,23 @@
 import bcrypt from "bcryptjs";
 
 import { query, withTransaction } from "./db.mjs";
-import { caseUsageSchemaStatements, videoTaskSchemaStatements } from "./schema.mjs";
+import {
+  aiNewsSchemaStatements,
+  appSettingSchemaStatements,
+  caseUsageSchemaStatements,
+  videoTaskSchemaStatements,
+} from "./schema.mjs";
 
 let caseUsageSchemaReady = null;
 let videoTaskSchemaReady = null;
+let appSchemaReady = null;
+let aiNewsSchemaReady = null;
+
+const DEFAULT_SETTINGS = {
+  derivePriceYuan: "0",
+  aiNewsRefreshTime: "09:00",
+  aiNewsLastUpdatedAt: "",
+};
 
 export function ensureCaseUsageSchema() {
   if (!caseUsageSchemaReady) {
@@ -28,17 +41,137 @@ export function ensureVideoTaskSchema() {
   return videoTaskSchemaReady;
 }
 
+export function ensureAppSchema() {
+  if (!appSchemaReady) {
+    appSchemaReady = (async () => {
+      for (const statement of appSettingSchemaStatements) {
+        await query(statement);
+      }
+    })();
+  }
+  return appSchemaReady;
+}
+
+export function ensureAiNewsSchema() {
+  if (!aiNewsSchemaReady) {
+    aiNewsSchemaReady = (async () => {
+      for (const statement of aiNewsSchemaStatements) {
+        await query(statement);
+      }
+    })();
+  }
+  return aiNewsSchemaReady;
+}
+
 export async function listBootstrap() {
-  const [categories, providers, prices, users] = await Promise.all([
+  const [categories, providers, prices, users, settings] = await Promise.all([
     query("SELECT id, name, sort_order AS sortOrder FROM categories ORDER BY sort_order, name"),
     query("SELECT id, name, base_url AS baseUrl, default_model AS defaultModel, enabled FROM providers ORDER BY id DESC"),
     query(`SELECT mp.id, mp.provider_id AS providerId, p.name AS providerName, mp.model, mp.display_name AS displayName,
       mp.unit_price_cents AS unitPriceCents, mp.enabled
       FROM model_prices mp JOIN providers p ON p.id = mp.provider_id ORDER BY mp.id DESC`),
     query("SELECT id, email, name, phone, role, balance_cents AS balanceCents FROM users ORDER BY id"),
+    getPublicSettings(),
   ]);
 
-  return { categories, providers: maskProviders(providers), prices, users };
+  return { categories, providers: maskProviders(providers), prices, users, settings };
+}
+
+export async function getPublicSettings() {
+  await ensureAppSchema();
+  const rows = await query("SELECT setting_key AS settingKey, setting_value AS settingValue FROM app_settings");
+  const settings = { ...DEFAULT_SETTINGS };
+  for (const row of rows) {
+    if (Object.hasOwn(settings, row.settingKey)) settings[row.settingKey] = row.settingValue || "";
+  }
+  return settings;
+}
+
+export async function saveSiteSettings(input) {
+  await ensureAppSchema();
+  const derivePrice = Number(input.derivePriceYuan ?? 0);
+  if (!Number.isFinite(derivePrice) || derivePrice < 0) throw new Error("推导提示词单价不能为负数");
+  const refreshTime = normalizeRefreshTime(input.aiNewsRefreshTime || DEFAULT_SETTINGS.aiNewsRefreshTime);
+  const values = {
+    derivePriceYuan: derivePrice.toFixed(2).replace(/\.00$/, ""),
+    aiNewsRefreshTime: refreshTime,
+  };
+  for (const [key, value] of Object.entries(values)) {
+    await query(
+      `INSERT INTO app_settings (setting_key, setting_value)
+       VALUES (:key, :value)
+       ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)`,
+      { key, value },
+    );
+  }
+  return getPublicSettings();
+}
+
+export async function getSetting(key, fallback = "") {
+  await ensureAppSchema();
+  const rows = await query("SELECT setting_value AS settingValue FROM app_settings WHERE setting_key = :key", { key });
+  return rows[0]?.settingValue ?? fallback;
+}
+
+export async function setSetting(key, value) {
+  await ensureAppSchema();
+  await query(
+    `INSERT INTO app_settings (setting_key, setting_value)
+     VALUES (:key, :value)
+     ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)`,
+    { key, value },
+  );
+}
+
+export async function listAiNewsItems({ limit = 40 } = {}) {
+  await ensureAiNewsSchema();
+  const safeLimit = normalizeOptionalPositiveInteger(limit) || 40;
+  return query(
+    `SELECT id, digest_date AS digestDate, category, title, summary, source_name AS sourceName,
+      source_url AS sourceUrl, published_at AS publishedAt, created_at AS createdAt
+     FROM ai_news_items ORDER BY digest_date DESC, id DESC LIMIT ${Math.min(safeLimit, 120)}`,
+  );
+}
+
+export async function replaceAiNewsItems(items) {
+  await ensureAiNewsSchema();
+  if (!items.length) return { inserted: 0 };
+  return withTransaction(async (connection) => {
+    let inserted = 0;
+    for (const item of items) {
+      const [result] = await connection.execute(
+        `INSERT INTO ai_news_items (digest_date, category, title, summary, source_name, source_url, published_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?)
+         ON DUPLICATE KEY UPDATE
+           digest_date = VALUES(digest_date),
+           category = VALUES(category),
+           title = VALUES(title),
+           summary = VALUES(summary),
+           source_name = VALUES(source_name),
+           published_at = VALUES(published_at)`,
+        [
+          item.digestDate,
+          item.category,
+          item.title,
+          item.summary,
+          item.sourceName,
+          item.sourceUrl,
+          item.publishedAt || null,
+        ],
+      );
+      if (result.affectedRows) inserted += 1;
+    }
+    await connection.execute("DELETE FROM ai_news_items WHERE digest_date < DATE_SUB(CURDATE(), INTERVAL 30 DAY)");
+    return { inserted };
+  });
+}
+
+function normalizeRefreshTime(value) {
+  const text = String(value || "").trim();
+  if (!/^\d{2}:\d{2}$/.test(text)) throw new Error("更新时间格式应为 HH:mm");
+  const [hour, minute] = text.split(":").map(Number);
+  if (hour > 23 || minute > 59) throw new Error("更新时间格式应为 HH:mm");
+  return text;
 }
 
 function buildCaseFilter({ category = "all", q = "" } = {}) {

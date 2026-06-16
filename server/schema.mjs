@@ -137,6 +137,30 @@ export const caseUsageSchemaStatements = [
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 ];
 
+export const appSettingSchemaStatements = [
+  `CREATE TABLE IF NOT EXISTS app_settings (
+    setting_key VARCHAR(80) NOT NULL PRIMARY KEY,
+    setting_value TEXT NULL,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+];
+
+export const aiNewsSchemaStatements = [
+  `CREATE TABLE IF NOT EXISTS ai_news_items (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    digest_date DATE NOT NULL,
+    category VARCHAR(40) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    summary TEXT NOT NULL,
+    source_name VARCHAR(120) NULL,
+    source_url TEXT NOT NULL,
+    published_at TIMESTAMP NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uniq_ai_news_source (source_url(190)),
+    INDEX idx_ai_news_date (digest_date, id)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+];
+
 /* 支付体系表：服务启动时自动确保存在（老库无需重新初始化） */
 export const paymentSchemaStatements = [
   `CREATE TABLE IF NOT EXISTS payment_configs (
