@@ -673,11 +673,18 @@ async function translateViaMyMemory(source) {
   return translated.join("");
 }
 
-async function getEnabledProviderCredential() {
+async function getProviderCredentialForModel(model) {
   const providers = await query(
-    "SELECT base_url AS baseUrl, api_key AS apiKey FROM providers WHERE enabled = 1 ORDER BY id LIMIT 1",
+    `SELECT p.base_url AS baseUrl, p.api_key AS apiKey
+     FROM providers p
+     LEFT JOIN model_prices mp ON mp.provider_id = p.id AND mp.enabled = 1
+     WHERE p.enabled = 1
+       AND (p.default_model = :model OR mp.model = :model OR mp.display_name = :model)
+     ORDER BY p.id
+     LIMIT 1`,
+    { model },
   );
-  if (!providers[0]) throw new Error("未配置可用供应商");
+  if (!providers[0]) throw new Error(`模型 ${model} 未绑定可用供应商，请在供应商与定价中启用该模型`);
   const base = String(providers[0].baseUrl || "").replace(/\/+$/, "");
   return {
     apiKey: providers[0].apiKey,
@@ -686,8 +693,8 @@ async function getEnabledProviderCredential() {
 }
 
 async function derivePromptFromImage(filePath, mimeType) {
-  const { apiKey, chatEndpoint } = await getEnabledProviderCredential();
   const model = process.env.DERIVE_MODEL || process.env.TRANSLATE_MODEL || "gpt-4o-mini";
+  const { apiKey, chatEndpoint } = await getProviderCredentialForModel(model);
   const base64 = (await readFile(filePath)).toString("base64");
 
   const response = await fetchWithTimeout(chatEndpoint, {
@@ -721,16 +728,11 @@ async function derivePromptFromImage(filePath, mimeType) {
   return result;
 }
 
-async function translateViaSiteProvider(source) {  const providers = await query(
-    "SELECT base_url AS baseUrl, api_key AS apiKey FROM providers WHERE enabled = 1 ORDER BY id LIMIT 1",
-  );
-  if (!providers[0]) throw new Error("未配置可用供应商");
-  const { baseUrl, apiKey } = providers[0];
-  const base = String(baseUrl || "").replace(/\/+$/, "");
-  const endpoint = base.endsWith("/v1") ? `${base}/chat/completions` : `${base}/v1/chat/completions`;
+async function translateViaSiteProvider(source) {
   const model = process.env.TRANSLATE_MODEL || "gpt-4o-mini";
+  const { apiKey, chatEndpoint } = await getProviderCredentialForModel(model);
 
-  const response = await fetchWithTimeout(endpoint, {
+  const response = await fetchWithTimeout(chatEndpoint, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
     body: JSON.stringify({

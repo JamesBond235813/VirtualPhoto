@@ -162,6 +162,14 @@ test("generation model selector ignores prices from disabled providers", () => {
   assert.match(appSource, /const price = generationPrices\(\)\.find\(\(p\) => p\.displayName === modelDisplayName\)/);
 });
 
+test("derive prompt routes the vision model through its matching enabled provider", () => {
+  assert.match(serverSource, /async function getProviderCredentialForModel\(model\)/);
+  assert.match(serverSource, /FROM providers p\s+LEFT JOIN model_prices mp ON mp\.provider_id = p\.id AND mp\.enabled = 1/s);
+  assert.match(serverSource, /WHERE p\.enabled = 1\s+AND \(p\.default_model = :model OR mp\.model = :model OR mp\.display_name = :model\)/s);
+  assert.match(serverSource, /const model = process\.env\.DERIVE_MODEL \|\| process\.env\.TRANSLATE_MODEL \|\| "gpt-4o-mini";\s+const \{ apiKey, chatEndpoint \} = await getProviderCredentialForModel\(model\);/s);
+  assert.doesNotMatch(serverSource, /async function getEnabledProviderCredential\(\)[\s\S]*ORDER BY id LIMIT 1/);
+});
+
 test("provider settings render one compact row per model", () => {
   assert.match(appSource, /function providerModelRows\(\)/);
   assert.match(appSource, /<table class="provider-model-table"/);
