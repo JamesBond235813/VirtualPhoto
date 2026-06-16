@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI 照相馆 · 创作工作台</title>
+    <link rel="icon" href="images/logo.png" />
+    <link rel="stylesheet" href="styles.css?v=20260615actionsright" />
+  </head>
+  <body>
+    <div class="bg-fx" aria-hidden="true"></div>
+    <div class="particle-field" id="particleField" aria-hidden="true"></div>
+    <canvas id="fluidCanvas" class="fluid-canvas" aria-hidden="true"></canvas>
+    <div id="inkPalette" class="ink-palette" aria-label="墨水颜色选择"></div>
+
+    <aside class="app-sidebar">
+      <div class="logo-mark"><img src="images/logo.svg" alt="AI 照相馆" /></div>
+
+      <nav class="sidebar-nav" aria-label="主导航">
+        <button class="nav-item" data-view="studio">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4Z"/><path d="M19 14.5 20 17l2.5 1L20 19l-1 2.5L18 19l-2.5-1L18 17Z"/></svg>
+          生成
+        </button>
+        <button class="nav-item" data-view="billing">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>
+          账单
+        </button>
+        <button class="nav-item" data-view="history">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
+          历史
+        </button>
+        <button class="nav-item active" data-view="cases">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          案例库
+        </button>
+        <button class="nav-item" data-view="settings" id="settingsNavItem" hidden>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+          供应商
+        </button>
+        <button class="nav-item" data-view="finance" id="financeNavItem" hidden>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          支付
+        </button>
+        <button class="nav-item" data-view="account" id="accountNavItem" hidden>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6"/><path d="M22 11h-6"/></svg>
+          用户
+        </button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="bottom-divider"></div>
+        <button class="icon-btn" id="themeToggle" type="button" title="切换深/浅主题" aria-label="切换主题">
+          <svg id="themeIconDark" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          <svg id="themeIconLight" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" hidden><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="user-chip" id="userChip" type="button">
+          <span class="avatar" id="userAvatar">·</span>
+          <span class="user-chip-meta">
+            <span class="name" id="currentUser">未登录</span>
+            <span class="balance" id="currentBalance">点击登录</span>
+          </span>
+        </button>
+      </header>
+
+      <!-- 案例库 -->
+      <section id="casesView" class="view active">
+        <div class="toolbar">
+          <div class="search-box">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input id="caseSearch" type="search" placeholder="搜索标题、作者或 Prompt…" />
+          </div>
+          <button id="newCaseButton" class="btn-primary">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            新增案例
+          </button>
+          <div class="summary summary-inline">
+            <div class="stat-card">
+              <div class="stat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg></div>
+              <div><strong id="caseCount">0</strong><span>案例</span></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5"/></svg></div>
+              <div><strong id="categoryCount">0</strong><span>分类</span></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 6h.01M6 18h.01"/></svg></div>
+              <div><strong id="providerCount">0</strong><span>供应商</span></div>
+            </div>
+          </div>
+        </div>
+        <div id="categoryChips" class="chip-row"></div>
+        <div id="gallery" class="gallery"></div>
+        <div class="gallery-more">
+          <button id="galleryLoadMore" class="pill gallery-load-more" type="button" hidden>
+            <span id="galleryLoadMoreLabel">继续加载</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- 对话式创作 -->
+      <section id="studioView" class="view">
+        <div class="generate-page">
+          <div class="timeline-area" id="genTimeline"></div>
+
+          <div class="composer-wrap">
+            <div id="stageActions" class="stage-actions" hidden>
+              <button class="pill" id="stageZoomIn" type="button" title="放大（+）">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3M11 8v6M8 11h6"/></svg>
+                放大
+              </button>
+              <button class="pill" id="stageZoomOut" type="button" title="缩小（−）">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3M8 11h6"/></svg>
+                缩小
+              </button>
+              <button class="pill" id="stageRotate" type="button" title="旋转 90°（R）">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+                旋转
+              </button>
+              <button class="pill" id="stageReuse" type="button" title="把本次提示词带回输入框">复用 Prompt</button>
+              <button class="pill" id="stageDownload" type="button" title="下载原图">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                下载
+              </button>
+              <button class="pill" id="stageInpaint" type="button" title="以当前作品为底图进行局部重绘">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+                局部修改
+              </button>
+              <button class="pill" id="stageClear" type="button" title="清场，恢复工作区（Esc）">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                清场
+              </button>
+            </div>
+            <div class="composer-card">
+              <div id="referencePreview" class="composer-uploads" hidden></div>
+              <div id="derivedPanel" class="derived-panel" hidden>
+                <div class="derived-head">
+                  <span class="derived-title">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/></svg>
+                    推导提示词
+                  </span>
+                  <div class="prompt-lang-tabs">
+                    <button class="lang-tab" id="derivedTabZh" type="button">中文</button>
+                    <button class="lang-tab active" id="derivedTabEn" type="button">English</button>
+                  </div>
+                  <span class="spacer" style="flex:1"></span>
+                  <button class="small-button" id="derivedCopyButton" type="button" title="复制提示词（⌘C）">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                    复制
+                  </button>
+                  <button class="small-button" id="derivedUseButton" type="button" title="填入下方输入框">填入</button>
+                  <button class="icon-btn derived-close" id="derivedCloseButton" type="button" aria-label="关闭">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                  </button>
+                </div>
+                <pre class="derived-text" id="derivedText"></pre>
+              </div>
+              <div id="maskEditor" class="mask-editor" hidden>
+                <div class="mask-canvas-wrap">
+                  <img id="maskBaseImage" alt="局部重绘原图" />
+                  <canvas id="maskCanvas" width="512" height="512"></canvas>
+                </div>
+                <div class="mask-toolbar">
+                  <span>涂抹需要重绘的区域</span>
+                  <label>画笔 <input id="maskBrushSize" type="range" min="8" max="80" value="32" /></label>
+                  <button class="pill" id="clearMaskButton" type="button">清空蒙版</button>
+                </div>
+              </div>
+              <div class="composer-body">
+                <div class="frame-placeholder" id="dropzone" title="上传参考图（PNG/JPG/WebP ≤12MB）">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                  <input id="referenceImage" type="file" accept="image/png,image/jpeg,image/webp,video/mp4,video/webm,video/quicktime" multiple />
+                </div>
+                <textarea id="studioPrompt" class="composer-input" rows="3" placeholder="描述主体、动作、风格、构图、光线、环境和输出要求，按 ⌘+Enter 直接生成…"></textarea>
+              </div>
+              <div class="composer-toolbar">
+                <div class="toolbar-left">
+                  <div class="generation-mode-stack" aria-label="生成类型">
+                    <div class="mode-segment" data-mode-group="image" role="group" aria-label="生图模式">
+                      <button class="mode-option active" type="button" data-generation-mode="text" aria-pressed="true">文生图</button>
+                      <button class="mode-option" type="button" data-generation-mode="image" aria-pressed="false">文+图</button>
+                      <button class="mode-option" type="button" data-generation-mode="inpaint" aria-pressed="false">局部重绘</button>
+                    </div>
+                    <div class="mode-segment" data-mode-group="video" role="group" aria-label="生视频模式">
+                      <button class="mode-option" type="button" data-generation-mode="video" aria-pressed="false">文生视频</button>
+                      <button class="mode-option" type="button" data-generation-mode="imageVideo" aria-pressed="false">图生视频</button>
+                      <button class="mode-option" type="button" data-generation-mode="videoVideo" aria-pressed="false">视频生视频</button>
+                    </div>
+                  </div>
+                  <div class="toolbar-stack model-reference-stack" aria-label="模型与案例参考">
+                    <span class="pill-select" title="生图模型">
+                      <select id="studioPrice"></select>
+                    </span>
+                    <div class="case-reference-control" id="caseReferenceControl">
+                      <button class="pill case-reference-trigger" id="caseReferenceButton" type="button" aria-haspopup="true" aria-expanded="false">
+                        <span id="caseReferenceLabel">案例参考</span>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                      </button>
+                      <div class="case-reference-menu" id="caseReferenceMenu" hidden>
+                        <div class="case-reference-list" id="caseReferenceList"></div>
+                        <div class="case-reference-preview" id="caseReferencePreview">
+                          <div class="case-reference-preview-empty">悬停案例查看示例图</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="video-options" id="videoOptions" hidden>
+                    <span class="pill-select" title="视频画幅">
+                      <select id="videoRatio">
+                        <option value="9:16">9:16 竖屏</option>
+                        <option value="16:9">16:9 横屏</option>
+                        <option value="1:1">1:1 方形</option>
+                      </select>
+                    </span>
+                    <span class="pill-select" title="视频时长">
+                      <select id="videoDuration">
+                        <option value="5">5 秒</option>
+                        <option value="10">10 秒</option>
+                      </select>
+                    </span>
+                    <span class="pill-select" title="视频清晰度">
+                      <select id="videoResolution">
+                        <option value="720p">720p</option>
+                        <option value="1080p">1080p</option>
+                      </select>
+                    </span>
+                  </div>
+                  <div class="toolbar-stack prompt-action-stack" aria-label="提示词工具">
+                    <button class="pill" id="openPromptTools" type="button">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2m0 20v-2m-7.5-.5L9 18m6-12 1.5-1.5M2 15h2m16 0h2M4.5 4.5 6 6m12 12 1.5 1.5M9 15l-5 5"/><path d="m14.5 7.5 2 2L22 4l-2-2z"/></svg>
+                      提示词辅助
+                    </button>
+                    <button class="pill" id="derivePromptButton" type="button" title="上传图片后，由 AI 反推生成提示词">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/></svg>
+                      推导提示词
+                    </button>
+                  </div>
+                  <label class="auth-chip" title="使用真人照片前必须确认授权">
+                    <input id="authorizationConfirmed" type="checkbox" />
+                    已获人物授权
+                  </label>
+                  <div class="toolbar-actions">
+                    <button class="pill" id="clearPromptButton" type="button" title="清空输入">清空</button>
+                    <button class="send-btn" id="generateButton" type="button" title="生成并扣费">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m3 3 3 9-3 9 19-9Z"/><path d="M6 12h16"/></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="input-hint">生成按所选模型单价从余额扣费 · 上传真人照片需勾选「已获人物授权」</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 用户与充值 -->
+      <section id="accountView" class="view">
+        <div class="toolbar">
+          <p class="toolbar-hint">管理用户账户与余额；在列表行内可为指定用户手动充值</p>
+          <button id="newUserButton" class="btn-primary">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            新增用户
+          </button>
+        </div>
+        <div id="usersTable" class="table-panel"></div>
+      </section>
+
+      <!-- 新增用户弹窗 -->
+      <dialog id="userCreateDialog" class="dialog-sm">
+        <form id="createUserForm" class="dialog-form">
+          <h3>新增用户</h3>
+          <p class="panel-sub">创建后用户即可用账号密码登录</p>
+          <label>账号</label>
+          <input name="email" type="text" placeholder="登录账号" required />
+          <label>姓名</label>
+          <input name="name" placeholder="显示姓名" required />
+          <label>初始密码</label>
+          <input name="password" type="password" placeholder="至少 6 位" required />
+          <div class="row-actions" style="margin-top:18px">
+            <button type="button" id="cancelUserCreate" style="flex:1">取消</button>
+            <button type="submit" class="btn-primary" style="flex:1.5">创建用户</button>
+          </div>
+        </form>
+      </dialog>
+
+      <!-- 管理员充值弹窗 -->
+      <dialog id="adminRechargeDialog" class="dialog-sm">
+        <form id="rechargeForm" class="dialog-form">
+          <h3>账户充值</h3>
+          <p class="panel-sub" id="rechargeTargetLabel">—</p>
+          <input type="hidden" name="userId" id="rechargeUserId" />
+          <label>充值金额（元）</label>
+          <input name="amountYuan" type="number" step="0.01" min="0.01" placeholder="0.00" required />
+          <label>备注</label>
+          <input name="note" placeholder="可选，例如：线下转账到账" />
+          <div class="row-actions" style="margin-top:18px">
+            <button type="button" id="cancelAdminRecharge" style="flex:1">取消</button>
+            <button type="submit" class="btn-primary" style="flex:1.5">确认充值</button>
+          </div>
+        </form>
+      </dialog>
+
+      <!-- 供应商与定价 -->
+      <section id="settingsView" class="view">
+        <div class="toolbar">
+          <button id="newProviderButton" class="btn-primary">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            新建供应商
+          </button>
+        </div>
+        <div id="providersList" class="providers-list"></div>
+      </section>
+
+      <!-- 财务（管理员） -->
+      <section id="financeView" class="view">
+        <div class="summary" style="grid-template-columns: repeat(3, minmax(0,1fr))">
+          <div class="stat-card">
+            <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg></div>
+            <div><strong id="financeBalance">¥0.00</strong><span>站点余额</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></svg></div>
+            <div><strong id="financeIncome">¥0.00</strong><span>累计收款</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v14"/><path d="m19 9-7 7-7-7"/><path d="M5 21h14"/></svg></div>
+            <div><strong id="financeWithdrawn">¥0.00</strong><span>累计提现</span></div>
+          </div>
+        </div>
+
+        <div class="toolbar" style="margin-top:4px">
+          <p class="toolbar-hint">配置企业支付宝 / 微信支付后，用户即可在线充值或单次付费生成</p>
+          <button id="withdrawButton" class="btn-primary">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v14"/><path d="m19 9-7 7-7-7"/><path d="M5 21h14"/></svg>
+            申请提现
+          </button>
+        </div>
+
+        <div id="payChannelsList" class="providers-list" style="margin-bottom:18px"></div>
+
+        <div class="two-col">
+          <div class="panel">
+            <h3 class="panel-title">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+              收支流水
+            </h3>
+            <div id="financeOrders"></div>
+          </div>
+          <div class="panel">
+            <h3 class="panel-title">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v14"/><path d="m19 9-7 7-7-7"/><path d="M5 21h14"/></svg>
+              提现记录
+            </h3>
+            <div id="financeWithdrawals"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 历史记录 -->
+      <!-- 账单：充值与消费 -->
+      <section id="billingView" class="view">
+        <div class="summary">
+          <div class="stat-card">
+            <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg></div>
+            <div><strong id="histBalance">¥0.00</strong><span>当前余额 <button class="small-button" id="histRechargeButton" type="button" style="margin-left:8px;min-height:24px;padding:0 9px;font-size:11px">充值</button></span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></svg></div>
+            <div><strong id="histRechargeSum" class="amount-pos">+¥0.00</strong><span>期间充值</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 17h6v-6"/><path d="m22 17-8.5-8.5-5 5L2 7"/></svg></div>
+            <div><strong id="histConsumeSum" class="amount-neg">−¥0.00</strong><span>期间消费</span></div>
+          </div>
+        </div>
+
+        <div class="toolbar history-controls">
+          <div class="chip-row" id="histGranularity" style="margin:0"></div>
+          <div class="hist-range">
+            <input type="date" id="histFrom" title="开始日期" />
+            <span class="hist-range-sep">至</span>
+            <input type="date" id="histTo" title="结束日期" />
+          </div>
+          <button id="histSearchButton" class="btn-primary small-button" style="min-height:36px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            查询
+          </button>
+          <button id="histResetButton" class="small-button" style="min-height:36px">重置</button>
+        </div>
+
+        <div class="panel">
+          <h3 class="panel-title">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+            消费流水
+          </h3>
+          <div id="walletList"></div>
+        </div>
+      </section>
+
+      <!-- 历史：作品画廊 -->
+      <section id="historyView" class="view">
+        <div class="toolbar history-controls creation-history-controls" id="creationHistoryControls" hidden>
+          <label class="filter-field" id="creationUserFilterWrap">
+            <span>用户</span>
+            <select id="creationUserFilter"></select>
+          </label>
+          <div class="filter-field creation-range-field">
+            <span>时间跨度</span>
+            <div class="hist-range" aria-label="创作时间跨度">
+              <input type="date" id="creationFrom" title="开始日期" />
+              <span class="hist-range-sep">至</span>
+              <input type="date" id="creationTo" title="结束日期" />
+            </div>
+          </div>
+          <button id="creationSearchButton" class="btn-primary small-button" style="min-height:36px" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            查询
+          </button>
+          <button id="creationResetButton" class="small-button" style="min-height:36px" type="button">重置</button>
+        </div>
+        <div class="toolbar">
+          <div class="chip-row" id="creationFilter" style="margin:0"></div>
+          <p class="toolbar-hint" id="creationSummary" style="text-align:right"></p>
+        </div>
+        <div id="creationList" class="artwork-grid"></div>
+      </section>
+    </main>
+
+    <!-- 用户 / 登录对话框 -->
+    <dialog id="userDialog" class="dialog-sm">
+      <div class="user-dialog-body">
+        <div id="signedInUser" hidden>
+          <div class="user-dialog-head">
+            <span class="avatar" id="dialogAvatar">·</span>
+            <div>
+              <div class="name" id="dialogUserName">未登录</div>
+              <div class="sub" id="dialogUserRole">—</div>
+            </div>
+          </div>
+          <div class="balance-line" style="margin-top:14px">
+            <span>账户余额</span>
+            <strong id="dialogBalance">¥0.00</strong>
+          </div>
+          <div class="row-actions" style="margin-top:16px">
+            <button id="openRechargeButton" type="button" class="btn-primary" style="flex:1.3">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+              在线充值
+            </button>
+            <button id="logoutButton" type="button" class="btn-danger" style="flex:1">退出登录</button>
+            <button id="closeUserDialog" type="button" style="flex:0.8">关闭</button>
+          </div>
+        </div>
+        <div id="authSection" hidden>
+          <div class="auth-tabs">
+            <button type="button" class="auth-tab active" id="authTabLogin">登 录</button>
+            <button type="button" class="auth-tab" id="authTabRegister">注 册</button>
+          </div>
+          <p class="auth-hint" id="authHint" hidden></p>
+
+          <form id="sidebarLoginForm">
+            <label>账号</label>
+            <input name="email" type="text" placeholder="请输入账号" autocomplete="username" required />
+            <label>密码</label>
+            <input name="password" type="password" placeholder="请输入密码" autocomplete="current-password" required />
+            <div class="row-actions" style="margin-top:16px">
+              <button type="submit" class="btn-primary" style="flex:1.4">登 录</button>
+              <button type="button" id="closeLoginDialog" style="flex:1">取消</button>
+            </div>
+          </form>
+
+          <form id="registerForm" hidden>
+            <label>账号</label>
+            <input name="email" type="text" placeholder="设置登录账号（至少 3 个字符）" autocomplete="username" required />
+            <label>手机号</label>
+            <div class="inline-control">
+              <input name="phone" id="regPhone" type="tel" maxlength="11" placeholder="11 位手机号" autocomplete="tel" required />
+              <button type="button" id="sendSmsButton" class="small-button" style="min-height:38px;white-space:nowrap">获取验证码</button>
+            </div>
+            <label>短信验证码</label>
+            <input name="smsCode" type="text" inputmode="numeric" maxlength="6" placeholder="6 位验证码" autocomplete="one-time-code" required />
+            <label>密码</label>
+            <input name="password" type="password" placeholder="设置密码（至少 6 位）" autocomplete="new-password" required />
+            <label>确认密码</label>
+            <input name="password2" type="password" placeholder="再次输入密码" autocomplete="new-password" required />
+            <div class="row-actions" style="margin-top:16px">
+              <button type="submit" class="btn-primary" style="flex:1.4">注册并登录</button>
+              <button type="button" id="closeRegisterDialog" style="flex:1">取消</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- 提示词辅助对话框 -->
+    <dialog id="promptToolsDialog">
+      <div class="dialog-form">
+        <h3>提示词辅助</h3>
+        <p class="panel-sub">选好维度后追加到 Prompt，或一键生成结构化 Prompt</p>
+        <div class="tool-grid">
+          <label>尺寸比例<select id="promptAspect"></select></label>
+          <label>画面风格<select id="promptStyle"></select></label>
+          <label>清晰度<select id="promptQuality"></select></label>
+          <label>配色<select id="promptPalette"></select></label>
+          <label>光线<select id="promptLighting"></select></label>
+          <label>环境<select id="promptEnvironment"></select></label>
+          <label>构图/镜头<select id="promptComposition"></select></label>
+        </div>
+        <div class="row-actions" style="margin-top:18px">
+          <button id="appendPromptHelperButton" type="button" class="btn-primary">追加到 Prompt</button>
+          <button id="composePromptHelperButton" type="button">生成结构化 Prompt</button>
+          <button id="closePromptTools" type="button">关闭</button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- 供应商向导对话框 -->
+    <dialog id="providerWizard">
+      <div class="dialog-form">
+        <div class="wizard-steps" aria-hidden="true">
+          <span class="wstep active" id="wstepTab1"><i>1</i>基本信息</span>
+          <span class="wstep-line"></span>
+          <span class="wstep" id="wstepTab2"><i>2</i>模型与价格</span>
+        </div>
+
+        <div id="wizardStep1">
+          <h3 id="wizardTitle">新建供应商</h3>
+          <p class="panel-sub">填写 OpenAI 兼容接口信息，下一步将自动解析可用生图模型与价格</p>
+          <label>供应商名称</label>
+          <input id="wzName" placeholder="例如 OpenAI / 中转站" />
+          <label>Base URL</label>
+          <input id="wzBaseUrl" placeholder="https://api.openai.com" />
+          <label>API Key</label>
+          <input id="wzApiKey" type="password" placeholder="sk-…" autocomplete="off" />
+          <p class="panel-sub" id="wzKeyHint" hidden style="margin-top:6px">编辑模式：留空表示沿用原 Key 并跳过重新解析，仅编辑已有模型与价格</p>
+          <div class="row-actions" style="margin-top:20px">
+            <button type="button" id="wizardCancelButton" style="flex:1">取消</button>
+            <button type="button" id="wizardNextButton" class="btn-primary" style="flex:1.6">下一步：解析模型</button>
+          </div>
+        </div>
+
+        <div id="wizardStep2" hidden>
+          <h3>选择模型与定价</h3>
+          <p class="panel-sub">勾选要上架的模型；<strong>解析不到价格的，请手动输入单次价格</strong>，价格随时可改</p>
+          <div id="wizardModels" class="wizard-models"></div>
+          <div class="row-actions" style="margin-top:20px">
+            <button type="button" id="wizardBackButton" style="flex:1">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+              返回上一步
+            </button>
+            <button type="button" id="wizardSaveButton" class="btn-primary" style="flex:1.6">确认保存</button>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- 案例编辑对话框 -->
+    <dialog id="caseDialog">
+      <form id="caseForm" method="dialog" class="dialog-form">
+        <h3 id="caseFormTitle">新增案例</h3>
+        <p class="panel-sub">完善案例信息，保存后立即出现在案例库中</p>
+        <input name="id" type="hidden" />
+        <label>分类</label>
+        <select name="categoryId" required></select>
+        <label>编号</label>
+        <input name="caseNumber" type="number" placeholder="案例编号（数字）" />
+        <label>标题</label>
+        <input name="title" placeholder="案例标题" required />
+        <label>作者</label>
+        <input name="author" placeholder="原作者或来源" />
+        <label>来源链接</label>
+        <input name="sourceUrl" placeholder="https://…" />
+        <label>图片路径</label>
+        <input name="image" placeholder="images/poster_case1/output.jpg" />
+        <label>Prompt</label>
+        <textarea name="prompt" rows="8" required></textarea>
+        <div class="row-actions">
+          <button value="save" class="btn-primary">保存案例</button>
+          <button value="cancel" type="button" id="cancelCaseButton">取消</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- 案例详情弹窗 -->
+    <dialog id="caseDetailDialog" class="case-detail-dialog">
+      <div id="caseDetailContent"></div>
+    </dialog>
+
+    <!-- 支付渠道配置弹窗 -->
+    <dialog id="channelConfigDialog">
+      <div class="dialog-form">
+        <h3 id="channelConfigTitle">配置支付渠道</h3>
+        <p class="panel-sub">敏感字段已保存的可留空，留空表示沿用原值</p>
+        <input id="ccChannel" type="hidden" />
+
+        <div id="alipayFields" hidden>
+          <label>AppID</label>
+          <input id="ccAlipayAppId" placeholder="支付宝开放平台应用 APPID" />
+          <label>应用私钥（RSA2）</label>
+          <textarea id="ccAlipayPrivateKey" rows="3" placeholder="可直接粘贴纯 base64 或完整 PEM"></textarea>
+          <label>支付宝公钥</label>
+          <textarea id="ccAlipayPublicKey" rows="3" placeholder="支付宝公钥（验签用）"></textarea>
+          <label>网关地址（可选）</label>
+          <input id="ccAlipayGateway" placeholder="默认 https://openapi.alipay.com/gateway.do" />
+          <label>支付结果通知地址 notify_url</label>
+          <div class="inline-control">
+            <input id="ccAlipayNotifyUrl" placeholder="https://…/api/payments/notify/alipay" />
+            <button type="button" id="copyAlipayNotifyUrlButton" class="small-button" style="min-height:38px;white-space:nowrap">复制</button>
+          </div>
+        </div>
+
+        <div id="wechatFields" hidden>
+          <label>商户号 mchid</label>
+          <input id="ccWechatMchId" placeholder="例如 1900000000" />
+          <label>AppID</label>
+          <input id="ccWechatAppId" placeholder="绑定的公众号 / 小程序 / APP 的 AppID" />
+          <label>商户证书序列号 serial_no</label>
+          <input id="ccWechatSerialNo" placeholder="API 证书序列号" />
+          <label>商户 API 私钥（apiclient_key.pem 内容）</label>
+          <textarea id="ccWechatPrivateKey" rows="3" placeholder="可直接粘贴纯 base64 或完整 PEM"></textarea>
+          <label>APIv3 密钥</label>
+          <input id="ccWechatApiV3Key" type="password" placeholder="32 位 APIv3 密钥" />
+          <label>支付结果通知地址 notify_url</label>
+          <div class="inline-control">
+            <input id="ccWechatNotifyUrl" placeholder="https://…/api/payments/notify/wechat" />
+            <button type="button" id="copyWechatNotifyUrlButton" class="small-button" style="min-height:38px;white-space:nowrap">复制</button>
+          </div>
+        </div>
+
+        <label>运行模式</label>
+        <select id="ccMode">
+          <option value="mock">模拟模式（本地联调，无需真实商户参数）</option>
+          <option value="production">生产模式（真实收款）</option>
+        </select>
+        <label class="check-line"><input id="ccEnabled" type="checkbox" /> 启用该渠道</label>
+
+        <div class="row-actions" style="margin-top:20px">
+          <button type="button" id="ccCancelButton" style="flex:1">取消</button>
+          <button type="button" id="ccSaveButton" class="btn-primary" style="flex:1.5">保存配置</button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- 提现弹窗 -->
+    <dialog id="withdrawDialog" class="dialog-sm">
+      <div class="dialog-form">
+        <h3>申请提现</h3>
+        <p class="panel-sub">提现为站内台账记录，实际打款请在支付宝 / 微信商户后台操作，完成后回来「标记已完成」</p>
+        <label>提现金额（元）</label>
+        <input id="wdAmount" type="number" step="0.01" min="0.01" placeholder="0.00" />
+        <label>备注</label>
+        <input id="wdNote" placeholder="可选，例如：提现至对公账户" />
+        <div class="row-actions" style="margin-top:18px">
+          <button type="button" id="wdCancelButton" style="flex:1">取消</button>
+          <button type="button" id="wdSaveButton" class="btn-primary" style="flex:1.5">提交提现申请</button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- 在线充值弹窗 -->
+    <dialog id="rechargeDialog" class="dialog-sm">
+      <div class="dialog-form">
+        <h3>在线充值</h3>
+        <p class="panel-sub">选择金额与支付方式，扫码完成后余额自动到账</p>
+        <label>充值金额</label>
+        <div class="chip-row" id="rcAmountChips" style="margin-bottom:8px"></div>
+        <input id="rcAmount" type="number" step="0.01" min="0.01" placeholder="或输入自定义金额（元）" />
+        <label>支付方式</label>
+        <div class="chip-row" id="rcChannelChips" style="margin-bottom:4px"></div>
+        <div class="row-actions" style="margin-top:18px">
+          <button type="button" id="rcCancelButton" style="flex:1">取消</button>
+          <button type="button" id="rcPayButton" class="btn-primary" style="flex:1.5">生成付款码</button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- 扫码支付弹窗 -->
+    <dialog id="payQrDialog" class="dialog-sm payqr-dialog">
+      <div class="dialog-form" style="text-align:center">
+        <h3 id="payQrTitle">扫码支付</h3>
+        <p class="panel-sub" id="payQrSubtitle">请使用对应 App 扫码完成支付</p>
+
+        <div id="payChooseSection" hidden>
+          <p class="payqr-amount" id="payChooseAmount">¥0.00</p>
+          <div class="chip-row" id="pgChannelChips" style="justify-content:center"></div>
+          <div class="row-actions" style="margin-top:18px">
+            <button type="button" id="pgCancelButton" style="flex:1">取消</button>
+            <button type="button" id="pgPayButton" class="btn-primary" style="flex:1.5">去支付</button>
+          </div>
+        </div>
+
+        <div id="payQrSection" hidden>
+          <p class="payqr-amount" id="payQrAmount">¥0.00</p>
+          <div class="qr-box" id="payQrBox"></div>
+          <div class="payqr-status" id="payQrStatus">
+            <span class="payqr-dot"></span>等待支付中…
+          </div>
+          <div class="row-actions" style="margin-top:16px">
+            <button type="button" id="payQrCancelButton" style="flex:1">取消支付</button>
+            <button type="button" id="simulatePayButton" class="btn-primary" style="flex:1.5" hidden>模拟支付成功（测试）</button>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- 通用确认弹窗 -->
+    <dialog id="confirmDialog" class="dialog-sm confirm-dialog">
+      <div class="confirm-body">
+        <div class="confirm-icon" id="confirmIcon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+        </div>
+        <h3 id="confirmTitle">确认操作</h3>
+        <p id="confirmMessage" class="confirm-message"></p>
+        <div class="row-actions confirm-actions">
+          <button type="button" id="confirmCancelButton">取消</button>
+          <button type="button" id="confirmOkButton" class="btn-danger">确认删除</button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- 图片灯箱 -->
+    <dialog id="lightbox" class="lightbox">
+      <img id="lightboxImg" alt="预览大图" />
+      <button class="lightbox-close" id="lightboxClose" type="button" aria-label="关闭">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </dialog>
+
+    <div id="toastStack" aria-live="polite"></div>
+
+    <script src="fluid.js?v=20260613bill"></script>
+    <script src="app.js?v=20260615actionsright"></script>
+  </body>
+</html>

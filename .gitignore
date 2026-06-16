@@ -40,4 +40,15 @@ script/
 data/ingested_tweets.json
 data/ingested_tweets.json
 .env
+node_modules/
+uploads/generated/*
+uploads/input/*
+!uploads/generated/.gitkeep
+!uploads/input/.gitkeep
 .skill/
+
+# Local OpenNana image cache
+images/opennana_case*/
+
+# Local downloaded reference pages
+参考样本站点/

@@ -1,0 +1,175 @@
+<style>
+      .preview-ribbon {
+        position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 300;
+        display: flex; align-items: center; gap: 8px; padding: 8px 16px;
+        border: 1px solid rgba(251, 191, 36, 0.4); border-radius: 99px;
+        background: rgba(30, 24, 8, 0.88); backdrop-filter: blur(12px);
+        color: #fbbf24; font-size: 12.5px; font-weight: 600; letter-spacing: 0.04em;
+        pointer-events: none;
+      }
+    </style>
+    <div class="preview-ribbon">预览模式 · 数据为本地模拟，不会写入数据库</div>
+    <script src="gallery-data.js"></script>
+    <script>
+      /* ---------- 模拟后端：拦截 fetch（仅预览页） ---------- */
+      (() => {
+        const D = window.GALLERY_DATA || { categories: [], cases: [] };
+        const CASES = (D.cases || []).map((c, i) => ({ ...c, id: i + 1 }));
+        const CATEGORIES = (D.categories || []).map((c) => ({ id: c.id, name: c.name }));
+        const USERS = [
+          { id: 1, email: "xiaojiang", name: "小姜", role: "admin", balanceCents: 98800 },
+          { id: 2, email: "demo", name: "演示用户", role: "user", balanceCents: 200 },
+        ];
+        let CURRENT_USER = USERS[0];
+        const PROVIDERS = [
+          { id: 1, name: "OpenAI 官方", baseUrl: "https://api.openai.com", defaultModel: "gpt-image-1", enabled: true },
+        ];
+        const PRICES = [
+          { id: 1, providerId: 1, providerName: "OpenAI 官方", model: "gpt-image-1", displayName: "高清绘图 Pro", unitPriceCents: 120, enabled: true },
+          { id: 2, providerId: 1, providerName: "OpenAI 官方", model: "dall-e-3", displayName: "极速出图", unitPriceCents: 60, enabled: true },
+        ];
+        const sampleImage = () => CASES.find((c) => c.image)?.image || "";
+        const day = 864e5;
+        const WALLET = [
+          { id: 6, type: "consume", amountCents: -120, balanceAfterCents: 98800, note: "图片生成：gpt-image-1", createdAt: new Date(Date.now() - 2 * 36e5).toISOString() },
+          { id: 5, type: "consume", amountCents: -60, balanceAfterCents: 98920, note: "单次支付：dall-e-3", createdAt: new Date(Date.now() - day).toISOString() },
+          { id: 4, type: "recharge", amountCents: 5000, balanceAfterCents: 98980, note: "在线充值 · 支付宝", createdAt: new Date(Date.now() - 2 * day).toISOString() },
+          { id: 3, type: "consume", amountCents: -240, balanceAfterCents: 93980, note: "图片生成：gpt-image-1", createdAt: new Date(Date.now() - 9 * day).toISOString() },
+          { id: 2, type: "refund", amountCents: 120, balanceAfterCents: 94220, note: "生成失败退款", createdAt: new Date(Date.now() - 16 * day).toISOString() },
+          { id: 1, type: "recharge", amountCents: 100000, balanceAfterCents: 100000, note: "初始充值", createdAt: new Date(Date.now() - 40 * day).toISOString() },
+        ];
+        const CREATIONS = [
+          { id: 2, model: "gpt-image-1", status: "succeeded", chargeCents: 120, imageUrl: CASES[2] ? CASES[2].image : null, prompt: CASES[2] ? CASES[2].prompt : "示例 Prompt", createdAt: new Date(Date.now() - 36e5).toISOString() },
+        ];
+
+        /* 支付模拟状态 */
+        const PAY = {
+          configs: {
+            alipay: { channel: "alipay", channelName: "支付宝", enabled: true, mode: "mock", config: { appId: "demo-app" }, secretsSet: { privateKey: true, alipayPublicKey: true } },
+            wechat: { channel: "wechat", channelName: "微信支付", enabled: true, mode: "mock", config: { mchId: "1900000000" }, secretsSet: { privateKey: false, apiV3Key: false } },
+          },
+          orders: [
+            { orderNo: "RC1749600000000DEMO", type: "recharge", channel: "alipay", amountCents: 5000, status: "paid", userName: "小姜", createdAt: new Date(Date.now() - 72e5).toISOString() },
+          ],
+          withdrawals: [
+            { id: 1, amountCents: 2000, note: "提现至对公账户", status: "done", createdAt: new Date(Date.now() - 36e5).toISOString() },
+          ],
+          seq: 1,
+        };
+
+        const delay = (ms) => new Promise((r) => setTimeout(r, ms));
+        const reply = (data) => ({ ok: true, json: async () => data });
+        const fail = (msg) => ({ ok: false, json: async () => ({ error: msg }) });
+
+        window.fetch = async (path, options = {}) => {
+          const url = new URL(path, location.origin);
+          const p = url.pathname;
+          const method = (options.method || "GET").toUpperCase();
+          const body = typeof options.body === "string" ? JSON.parse(options.body || "{}") : {};
+          await delay(120);
+
+          if (p.endsWith("/api/bootstrap")) return reply({ categories: CATEGORIES, providers: PROVIDERS, prices: PRICES, users: USERS });
+          if (p.endsWith("/api/cases")) {
+            const cat = url.searchParams.get("category") || "all";
+            const q = (url.searchParams.get("q") || "").toLowerCase();
+            let list = CASES;
+            if (cat !== "all") list = list.filter((c) => String(c.categoryId) === cat);
+            if (q) list = list.filter((c) => (c.title + " " + (c.author || "") + " " + c.prompt).toLowerCase().includes(q));
+            return reply(list.slice(0, 60));
+          }
+          if (p.endsWith("/api/case-references")) {
+            return reply(CATEGORIES.map((cat) => ({ id: cat.id, name: cat.name, cases: CASES.filter((c) => c.categoryId === cat.id).slice(0, 8) })));
+          }
+          if (p.endsWith("/api/translate")) return reply({ text: "【中文翻译·模拟】" + String(body.text || "").slice(0, 160) });
+          if (p.endsWith("/api/derive-prompt")) {
+            await delay(1200);
+            return reply({
+              en: "An adult female fairy in a violet dress waving a glowing magic wand, cartoon style, soft night sky background, sparkles, clean flat illustration, high quality",
+              zh: "一位身穿紫罗兰连衣裙的卡通小仙女挥舞着发光的魔法棒，柔和的夜空背景，星光闪烁，干净的扁平插画风格，高品质",
+              chargeCents: 0,
+              balanceCents: null,
+            });
+          }
+          if (p.endsWith("/api/login")) {
+            CURRENT_USER = USERS.find((u) => u.email === body.email) || USERS[0];
+            return reply({ user: CURRENT_USER });
+          }
+          if (p.endsWith("/api/sms/send")) {
+            return reply({ ok: true, mock: true });
+          }
+          if (p.endsWith("/api/register")) {
+            if (USERS.some((u) => u.email === body.email)) return fail("该账号已被注册，请直接登录");
+            if (!/^\d{6}$/.test(String(body.smsCode || ""))) return fail("短信验证码不正确（预览模式任意 6 位数字即可）");
+            const user = { id: USERS.length + 1, email: body.email, name: body.name || body.email, role: "user", balanceCents: 0 };
+            USERS.push(user);
+            CURRENT_USER = user;
+            return reply({ user });
+          }
+          if (/\/api\/users\/\d+\/wallet/.test(p)) {
+            const from = url.searchParams.get("from");
+            const to = url.searchParams.get("to");
+            let list = WALLET;
+            if (from) list = list.filter((w) => w.createdAt.slice(0, 10) >= from);
+            if (to) list = list.filter((w) => w.createdAt.slice(0, 10) <= to);
+            return reply(list);
+          }
+          if (/\/api\/users\/\d+\/creations$/.test(p)) return reply(CREATIONS);
+          if (p.endsWith("/api/generate")) {
+            await delay(1800);
+            return reply({ id: 99, imageUrl: sampleImage(), chargeCents: 120, balanceCents: CURRENT_USER.balanceCents });
+          }
+          if (p.endsWith("/api/providers/discover")) {
+            await delay(600);
+            return reply({ models: [
+              { id: "gpt-image-1", displayName: "gpt-image-1", unitPriceCents: 120, priceSource: "pricing api" },
+              { id: "dall-e-3", displayName: "dall-e-3", unitPriceCents: 0, priceSource: "not_found" },
+            ] });
+          }
+
+          /* ----- 支付与财务 ----- */
+          if (p.endsWith("/api/payments/config") && method === "GET") return reply({ channels: Object.values(PAY.configs) });
+          if (p.endsWith("/api/payments/config") && method === "POST") {
+            const cfg = PAY.configs[body.channel];
+            if (cfg) { cfg.enabled = body.enabled; cfg.mode = body.mode; Object.assign(cfg.config, body.config || {}); }
+            return reply({ ok: true });
+          }
+          if (p.endsWith("/api/payments/channels"))
+            return reply({ channels: Object.values(PAY.configs).filter((c) => c.enabled).map(({ channel, channelName, mode }) => ({ channel, channelName, mode })) });
+          if (p.endsWith("/api/payments/orders") && method === "POST") {
+            const amountCents = Math.round(Number(body.amountYuan) * 100);
+            const orderNo = (body.type === "recharge" ? "RC" : "PG") + Date.now() + PAY.seq++;
+            const order = { orderNo, type: body.type, channel: body.channel, amountCents, status: "pending", userName: CURRENT_USER.name, createdAt: new Date().toISOString() };
+            PAY.orders.unshift(order);
+            return reply({ orderNo, type: body.type, channel: body.channel, mode: "mock", amountCents, qrText: `mockpay://${body.channel}/${orderNo}`, qrDataUrl: null });
+          }
+          const orderMatch = p.match(/\/api\/payments\/orders\/([^/]+)(\/simulate)?$/);
+          if (orderMatch) {
+            const order = PAY.orders.find((o) => o.orderNo === orderMatch[1]);
+            if (!order) return fail("订单不存在");
+            if (orderMatch[2]) {
+              order.status = "paid";
+              if (order.type === "recharge") CURRENT_USER.balanceCents += order.amountCents;
+            }
+            const result = { orderNo: order.orderNo, status: order.status, type: order.type, amountCents: order.amountCents };
+            if (order.type === "recharge" && order.status === "paid") result.balanceCents = CURRENT_USER.balanceCents;
+            return reply(result);
+          }
+          if (p.endsWith("/api/finance/summary")) {
+            const income = PAY.orders.filter((o) => o.status === "paid").reduce((s, o) => s + o.amountCents, 0);
+            const withdrawn = PAY.withdrawals.reduce((s, w) => s + w.amountCents, 0);
+            return reply({ totalIncomeCents: income, totalWithdrawCents: withdrawn, balanceCents: income - withdrawn, orders: PAY.orders, withdrawals: PAY.withdrawals });
+          }
+          if (p.endsWith("/api/finance/withdrawals") && method === "POST") {
+            PAY.withdrawals.unshift({ id: Date.now(), amountCents: Math.round(Number(body.amountYuan) * 100), note: body.note, status: "pending", createdAt: new Date().toISOString() });
+            return reply({ ok: true });
+          }
+          if (/\/api\/finance\/withdrawals\/\d+\/done$/.test(p)) {
+            const w = PAY.withdrawals.find((x) => String(x.id) === p.split("/").slice(-2)[0]);
+            if (w) w.status = "done";
+            return reply({ ok: true });
+          }
+
+          return reply({ ok: true, id: 1 });
+        };
+      })();
+    </script>

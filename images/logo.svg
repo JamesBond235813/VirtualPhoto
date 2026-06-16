@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <style>
+    .fairy { animation: bob 3.4s ease-in-out infinite; }
+    .wing { transform-box: fill-box; transform-origin: 92% 40%; animation: flutter 0.85s ease-in-out infinite alternate; }
+    .wing.back { animation-delay: 0.18s; }
+    .tip { transform-box: fill-box; transform-origin: center; animation: pulse 1.5s ease-in-out infinite; }
+    .halo { transform-box: fill-box; transform-origin: center; animation: pulse 1.5s ease-in-out infinite reverse; }
+    .sp { transform-box: fill-box; transform-origin: center; animation: twinkle 2s ease-in-out infinite; }
+    .sp2 { animation-delay: 0.5s; }
+    .sp3 { animation-delay: 1s; }
+    .sp4 { animation-delay: 1.5s; }
+    @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+    @keyframes flutter { from { transform: rotate(-4deg); } to { transform: rotate(14deg); } }
+    @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.35); opacity: 0.82; } }
+    @keyframes twinkle { 0%, 100% { opacity: 0.15; transform: scale(0.55); } 50% { opacity: 1; transform: scale(1.15); } }
+  </style>
+
+  <!-- 透明底：独立小仙女（外层组负责居中缩放，内层组承载悬浮动画） -->
+  <g transform="translate(-91,-30) scale(1.12)">
+  <g class="fairy">
+    <!-- 翅膀（身后，扇动） -->
+    <g class="wing back">
+      <ellipse cx="168" cy="292" rx="62" ry="30" fill="#9fe6ff" opacity="0.38" transform="rotate(-18 168 292)"/>
+    </g>
+    <g class="wing">
+      <ellipse cx="160" cy="232" rx="76" ry="38" fill="#bdefff" opacity="0.55" transform="rotate(-30 160 232)"/>
+    </g>
+
+    <!-- 后摆手臂 -->
+    <path d="M226 272 Q205 288 202 308" stroke="#ffd9c4" stroke-width="13" stroke-linecap="round" fill="none"/>
+
+    <!-- 连衣裙 -->
+    <path d="M248 258 L206 366 Q231 380 256 380 Q281 380 306 366 L264 258 Z" fill="#8b5cf6"/>
+    <path d="M206 366 Q231 380 256 380 Q281 380 306 366 L298 346 Q256 362 214 346 Z" fill="#a78bfa"/>
+
+    <!-- 腿与小鞋 -->
+    <path d="M238 374 L233 410" stroke="#ffd9c4" stroke-width="11" stroke-linecap="round"/>
+    <path d="M272 374 L278 410" stroke="#ffd9c4" stroke-width="11" stroke-linecap="round"/>
+    <circle cx="231" cy="416" r="9" fill="#7c3aed"/>
+    <circle cx="280" cy="416" r="9" fill="#7c3aed"/>
+
+    <!-- 头 -->
+    <circle cx="256" cy="212" r="54" fill="#ffd9c4"/>
+    <!-- 头发与发髻 -->
+    <path d="M202 212 A54 54 0 0 1 310 212 L302 186 Q256 148 210 186 Z" fill="#7c3aed"/>
+    <path d="M210 186 Q256 154 302 186 Q283 162 256 162 Q229 162 210 186 Z" fill="#8b5cf6"/>
+    <circle cx="308" cy="172" r="20" fill="#7c3aed"/>
+    <circle cx="313" cy="166" r="6" fill="#a78bfa"/>
+
+    <!-- 表情 -->
+    <circle cx="238" cy="212" r="5.5" fill="#2a2140"/>
+    <circle cx="274" cy="212" r="5.5" fill="#2a2140"/>
+    <circle cx="240" cy="210" r="1.8" fill="#ffffff"/>
+    <circle cx="276" cy="210" r="1.8" fill="#ffffff"/>
+    <circle cx="228" cy="230" r="6.5" fill="#ffadbe" opacity="0.65"/>
+    <circle cx="284" cy="230" r="6.5" fill="#ffadbe" opacity="0.65"/>
+    <path d="M246 234 Q256 243 266 234" stroke="#c96f52" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+
+    <!-- 挥棒手臂 -->
+    <path d="M284 262 Q312 240 334 208" stroke="#ffd9c4" stroke-width="13" stroke-linecap="round" fill="none"/>
+    <circle cx="336" cy="206" r="9" fill="#ffd9c4"/>
+
+    <!-- 魔法棒 -->
+    <path d="M338 202 L382 148" stroke="#ffe9a8" stroke-width="7" stroke-linecap="round"/>
+
+    <!-- 棒尖星光（脉冲） -->
+    <circle class="halo" cx="390" cy="138" r="26" fill="#ffd84d" opacity="0.28"/>
+    <path class="tip" d="M390 114 L397 131 L414 138 L397 145 L390 162 L383 145 L366 138 L383 131 Z" fill="#ffd84d"/>
+
+    <!-- 魔法星屑（错峰闪烁） -->
+    <path class="sp" d="M428 96 L432 106 L442 110 L432 114 L428 124 L424 114 L414 110 L424 106 Z" fill="#9fe6ff"/>
+    <path class="sp sp2" d="M352 92 L355 99 L362 102 L355 105 L352 112 L349 105 L342 102 L349 99 Z" fill="#ffd84d"/>
+    <path class="sp sp3" d="M428 190 L431 197 L438 200 L431 203 L428 210 L425 203 L418 200 L425 197 Z" fill="#c4b5fd"/>
+    <circle class="sp sp4" cx="368" cy="178" r="5" fill="#9fe6ff"/>
+    <circle class="sp sp2" cx="404" cy="86" r="4" fill="#c4b5fd"/>
+  </g>
+  </g>
+</svg>
