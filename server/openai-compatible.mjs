@@ -64,12 +64,11 @@ async function editImage({ provider, model, prompt, imagePaths, maskPath }) {
   const files = await Promise.all(imagePaths.map((item) => readUploadFile(item)));
   const mask = maskPath ? await readUploadFile(maskPath, "mask.png") : null;
 
-  const fieldName = files.length > 1 ? "image[]" : "image";
   const parts = [
     { name: "model", value: model },
     { name: "prompt", value: prompt },
     { name: "size", value: "1024x1024" },
-    ...files.map((file) => ({ name: fieldName, filename: file.name, mime: file.mime, data: file.bytes })),
+    ...files.map((file) => ({ name: "image", filename: file.name, mime: file.mime, data: file.bytes })),
   ];
   if (mask) parts.push({ name: "mask", filename: mask.name, mime: mask.mime, data: mask.bytes });
   const { body, contentType } = buildMultipart(parts);
