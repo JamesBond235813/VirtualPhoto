@@ -72,6 +72,33 @@ test("reference image generation calls edits with an image multipart field", asy
   }
 });
 
+test("multiple reference images use repeated image multipart fields for gpt-image edits", async () => {
+  const originalFetch = globalThis.fetch;
+  const imagePaths = [await writeTempImage("first.png"), await writeTempImage("second.png")];
+  let captured;
+  globalThis.fetch = async (url, options) => {
+    captured = { url, options };
+    return jsonResponse({ data: [{ url: "https://cdn.example/combined.png" }] });
+  };
+
+  try {
+    const imageUrl = await generateImage({
+      provider,
+      model: "gpt-image-2",
+      prompt: "融合两张参考图生成新照片",
+      imagePaths,
+    });
+
+    assert.equal(imageUrl, "https://cdn.example/combined.png");
+    assert.equal(captured.url, "http://user-service.local/v1/images/edits");
+    const multipart = multipartText(captured.options);
+    assert.equal(countMultipartFiles(multipart, "image"), 2);
+    assert.equal(countMultipartFiles(multipart, "image[]"), 0);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
 test("gpt-image image edits do not fall back to chat completions after upstream image failure", async () => {
   const originalFetch = globalThis.fetch;
   const imagePath = await writeTempImage("reference.png");
@@ -166,6 +193,11 @@ function assertMultipartFile(text, name) {
     text,
     new RegExp(`Content-Disposition: form-data; name="${escapeRegExp(name)}"; filename="[^"]+\\.png"\\r\\nContent-Type: image/png\\r\\n\\r\\nfake-png\\r\\n`),
   );
+}
+
+function countMultipartFiles(text, name) {
+  const pattern = new RegExp(`Content-Disposition: form-data; name="${escapeRegExp(name)}"; filename="[^"]+"`, "g");
+  return [...text.matchAll(pattern)].length;
 }
 
 function escapeRegExp(value) {
